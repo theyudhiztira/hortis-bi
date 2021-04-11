@@ -1,7 +1,6 @@
 module.exports = (app) => {
-    const auth = require('../controllers/auth.js')
-    const verify = require('../validators/agents')
-
-    app.post('/login', verify.login, auth.login)
-    app.post('/verify-token', auth.verifyToken)
+    const controller = require('../controllers/auth')
+    const validator = require('../validators/user')
+    
+    app.post('/login', validator.login, controller.login)
 }
