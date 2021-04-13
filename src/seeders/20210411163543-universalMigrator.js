@@ -64,8 +64,8 @@ module.exports = {
                 "status": "1",
                 "is_unlimited": true,
                 "created_by": 1,
-                "created_at": "2021-04-11T19:31:36.000Z",
-                "updated_at": "2021-04-11T19:31:36.000Z",
+                "created_at": "2021-02-18 00:00:00",
+                "updated_at": "2021-02-18 00:00:00",
             },
             {
                 "id": 2,
@@ -78,8 +78,8 @@ module.exports = {
                 "status": "1",
                 "is_unlimited": true,
                 "created_by": 1,
-                "created_at": "2021-04-11T19:31:51.000Z",
-                "updated_at": "2021-04-11T19:31:51.000Z",
+                "created_at": "2021-02-18 00:00:00",
+                "updated_at": "2021-02-18 00:00:00",
             },
             {
                 "id": 3,
@@ -92,8 +92,8 @@ module.exports = {
                 "status": "1",
                 "is_unlimited": true,
                 "created_by": 1,
-                "created_at": "2021-04-11T19:32:03.000Z",
-                "updated_at": "2021-04-11T19:32:03.000Z",
+                "created_at": "2021-02-18 00:00:00",
+                "updated_at": "2021-02-18 00:00:00",
             },
             {
                 "id": 4,
@@ -106,8 +106,8 @@ module.exports = {
                 "status": "1",
                 "is_unlimited": true,
                 "created_by": 1,
-                "created_at": "2021-04-11T19:32:30.000Z",
-                "updated_at": "2021-04-11T19:32:30.000Z",
+                "created_at": "2021-02-18 00:00:00",
+                "updated_at": "2021-02-18 00:00:00",
             },
             {
                 "id": 5,
@@ -120,8 +120,8 @@ module.exports = {
                 "status": "1",
                 "is_unlimited": true,
                 "created_by": 1,
-                "created_at": "2021-04-11T19:32:40.000Z",
-                "updated_at": "2021-04-11T19:32:40.000Z",
+                "created_at": "2021-02-18 00:00:00",
+                "updated_at": "2021-02-18 00:00:00",
             },
             {
                 "id": 6,
@@ -134,8 +134,8 @@ module.exports = {
                 "status": "1",
                 "is_unlimited": true,
                 "created_by": 1,
-                "created_at": "2021-04-11T19:32:55.000Z",
-                "updated_at": "2021-04-11T19:32:55.000Z",
+                "created_at": "2021-02-18 00:00:00",
+                "updated_at": "2021-02-18 00:00:00",
             },
             {
                 "id": 7,
@@ -148,8 +148,8 @@ module.exports = {
                 "status": "1",
                 "is_unlimited": true,
                 "created_by": 1,
-                "created_at": "2021-04-11T19:33:31.000Z",
-                "updated_at": "2021-04-11T19:33:31.000Z",
+                "created_at": "2021-02-18 00:00:00",
+                "updated_at": "2021-02-18 00:00:00",
             },
             {
                 "id": 8,
@@ -162,8 +162,8 @@ module.exports = {
                 "status": "1",
                 "is_unlimited": true,
                 "created_by": 1,
-                "created_at": "2021-04-11T19:33:45.000Z",
-                "updated_at": "2021-04-11T19:33:45.000Z",
+                "created_at": "2021-02-18 00:00:00",
+                "updated_at": "2021-02-18 00:00:00",
             }
         ])
     },

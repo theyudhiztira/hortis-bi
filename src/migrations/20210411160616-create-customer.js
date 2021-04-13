@@ -9,13 +9,15 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             full_name: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                unique: true
             },
             phone: {
                 type: Sequelize.STRING
             },
             email: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                unique: true
             },
             created_by: {
                 type: Sequelize.INTEGER

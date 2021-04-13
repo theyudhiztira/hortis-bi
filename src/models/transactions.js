@@ -11,6 +11,15 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            models.transactions.hasMany(models.transaction_items, {
+                foreignKey: 'transaction_id',
+                require: true,
+                as: 'items'
+            })
+            models.transactions.belongsTo(models.user, {
+                foreignKey: 'created_by',
+                as: 'creator_details'
+            })
         }
     };
     transactions.init({

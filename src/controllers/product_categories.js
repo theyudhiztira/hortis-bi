@@ -21,7 +21,7 @@ module.exports = {
             })
         }catch(err){
             console.error(err)
-            return helper.internalServerError(res)
+            return helper.errorResponse(res)
         }
     },
 
@@ -35,7 +35,7 @@ module.exports = {
             return res.status(200).send(data)
         }catch(err){
             console.error(err)
-            return helper.internalServerError(res)
+            return helper.errorResponse(res)
         }
     }, 
 
@@ -53,7 +53,7 @@ module.exports = {
             })
         }catch(err){
             console.error(err)
-            return helper.internalServerError(res)
+            return helper.errorResponse(res)
         }
     },
 
@@ -90,7 +90,7 @@ module.exports = {
             return res.status(200).send(updatedData)
         }catch(err){
             console.error(err)
-            return helper.internalServerError(res)
+            return helper.errorResponse(res)
         }
     }
 }

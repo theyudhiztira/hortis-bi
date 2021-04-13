@@ -5,27 +5,25 @@ const helper = require('../helpers/helpers')
 module.exports = {
     create: async (req, res) => {
         try{
-            const data = await model.product_entries.create({
-                name: req.body.name,
-                category_id: req.body.category_id,
-                name: req.body.name,
-                unit: req.body.unit,
-                price_per_unit_retail: req.body.price_per_unit_retail,
-                price_per_unit_reseller: req.body.price_per_unit_reseller,
-                stock: req.body.stock,
+            const data = await model.customer.create({
+                full_name: req.body.full_name,
+                phone: req.body.phone,
+                email: req.body.email,
                 created_by: req.userData.id
             })
 
             return res.status(200).send(data)
         }catch(err){
-            console.error(err)
+            if(err.original.code === 'ER_DUP_ENTRY'){
+                return helper.errorResponse(res, 'Customer already exists please check the details!', 422)
+            }
             return helper.errorResponse(res)
         }
     },
 
     get: async (req, res) => {
         try{
-            const data = await model.product_entries.findOne({
+            const data = await model.customer.findOne({
                 where: {
                     id: req.params.id
                 },
@@ -33,10 +31,6 @@ module.exports = {
                 include: [{
                     model: model.user.scope('ownership'),
                     as: 'creator_details'
-                },
-                {
-                    model: model.product_categories.scope('categoryDetails'),
-                    as: 'category_details'
                 }]
             });
 
@@ -51,13 +45,10 @@ module.exports = {
 
     list: async (req, res) => {
         try{
-            const data = await model.product_entries.findAll({
+            const data = await model.customer.findAll({
                 include: [{
                     model: model.user.scope('ownership'),
                     as: 'creator_details'
-                }, {
-                    model: model.product_categories.scope('categoryDetails'),
-                    as: 'category_details'
                 }]
             });
 
@@ -75,7 +66,7 @@ module.exports = {
 
         try{
             const allowedToEdit = [
-                'category_id', 'name', 'unit', 'price_per_unit_retail', 'price_per_unit_reseller', 'stock', 'is_unlimited'
+                'full_name', 'phone', 'email'
             ];
             
             (Object.keys(body)).map(v => {
@@ -84,22 +75,19 @@ module.exports = {
                 }
             })
 
-            await model.product_entries.update(body, {
+            await model.customer.update(body, {
                 where: {
                     id: req.params.id
                 }
             })
 
-            const updatedData = await model.product_entries.findOne({
+            const updatedData = await model.customer.findOne({
                 where: {
                     id: req.params.id
                 },
                 include: [{
                     model: model.user.scope('ownership'),
                     as: 'creator_details'
-                }, {
-                    model: model.product_categories.scope('categoryDetails'),
-                    as: 'category_details'
                 }]
             })
 

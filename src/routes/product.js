@@ -1,6 +1,6 @@
 module.exports = (app) => {
     const controller = require('../controllers/product')
-    const validator = require('../validators/product_categories')
+    const validator = require('../validators/product')
     const checkAuth = require('../middlewares/auth')
 
     app.post('/product', checkAuth.verifyToken, checkAuth.adminOnly, validator.create, controller.create)

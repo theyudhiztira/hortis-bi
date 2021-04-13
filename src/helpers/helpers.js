@@ -2,11 +2,12 @@ module.exports = {
     /**
      * 
      * @param {object} res fetched from app router res
-     * @param {string} customMessage **optional** custom error message 
-     * @returns {function}
+     * @param {number} customMessage **optional** custom error message 
+     * @param {number} customCode **optional** custom error code please refer to {@link https://httpstatuses.com} 
+     * @returns {function} 
      */
-    internalServerError: (res, customMessage) => {
-        return res.status(500).send({
+    errorResponse: (res, customMessage, customCode) => {
+        return res.status(customCode ? customCode : 500).send({
             message: customMessage ? customMessage : "Internal server occured"
         })
     }
