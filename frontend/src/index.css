@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+
+body{
+    margin: 0
+}
+
+.bg-bluekegreyish{
+    background-color: rgb(51, 65, 85)
+}
+
+.text-grey{
+    color: rgb(84, 86, 90); 
+}
+
+.bg-blueGray-50 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(248, 250, 252, var(--tw-bg-opacity))
+}
+
+.bg-blueGray-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(241, 245, 249, var(--tw-bg-opacity))
+}
+
+.bg-blueGray-200 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(226, 232, 240, var(--tw-bg-opacity))
+}
+
+.bg-blueGray-400 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(148, 163, 184, var(--tw-bg-opacity))
+}
+
+.bg-blueGray-500 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(100, 116, 139, var(--tw-bg-opacity))
+}
+
+.bg-blueGray-600 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(71, 85, 105, var(--tw-bg-opacity))
+}
+
+.bg-blueGray-700 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(51, 65, 85, var(--tw-bg-opacity))
+}
+
+.bg-blueGray-800 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(30, 41, 59, var(--tw-bg-opacity))
+}
+
+
+.text-blueGray-50 {
+    --tw-text-opacity: 1;
+    color: rgba(248, 250, 252, var(--tw-text-opacity))
+}
+
+.text-blueGray-100 {
+    --tw-text-opacity: 1;
+    color: rgba(241, 245, 249, var(--tw-text-opacity))
+}
+
+.text-blueGray-200 {
+    --tw-text-opacity: 1;
+    color: rgba(226, 232, 240, var(--tw-text-opacity))
+}
+
+.text-blueGray-300 {
+    --tw-text-opacity: 1;
+    color: rgba(203, 213, 225, var(--tw-text-opacity))
+}
+
+.text-blueGray-400 {
+    --tw-text-opacity: 1;
+    color: rgba(148, 163, 184, var(--tw-text-opacity))
+}
+
+.text-blueGray-500 {
+    --tw-text-opacity: 1;
+    color: rgba(100, 116, 139, var(--tw-text-opacity))
+}
+
+.text-blueGray-600 {
+    --tw-text-opacity: 1;
+    color: rgba(71, 85, 105, var(--tw-text-opacity))
+}
+
+.text-blueGray-700 {
+    --tw-text-opacity: 1;
+    color: rgba(51, 65, 85, var(--tw-text-opacity))
+}
+
+.text-blueGray-800 {
+    --tw-text-opacity: 1;
+    color: rgba(30, 41, 59, var(--tw-text-opacity))
+}
+
+
+@tailwind utilities;
