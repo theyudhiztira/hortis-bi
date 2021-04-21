@@ -1,6 +1,6 @@
 class Auth {
     isAuthenticated(){
-        let token = localStorage.getItem('token');
+        let token = localStorage.getItem('hortis_token');
 
         if (token){
             return true;

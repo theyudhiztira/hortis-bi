@@ -57,7 +57,7 @@ exports.login = async (req, res) => {
             });
         } else {
             return res.status(403).send({
-                message: 'Auth Failed'
+                message: 'Please check your credentials!'
             });
         }
     });

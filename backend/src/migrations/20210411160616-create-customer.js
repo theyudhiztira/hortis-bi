@@ -9,8 +9,7 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             full_name: {
-                type: Sequelize.STRING,
-                unique: true
+                type: Sequelize.STRING
             },
             phone: {
                 type: Sequelize.STRING

@@ -12,7 +12,7 @@ function PublicRoute({ component: Component, ...rest }) {
                 } else {
                     return <Redirect to={
                         {
-                            pathname: "/dashboard"
+                            pathname: "/home"
                         }
                     } />
                 }

@@ -1,8 +1,24 @@
 @tailwind base;
 @tailwind components;
 
-body{
-    margin: 0
+html,
+body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+}
+
+section {
+    display: block;
+    background: #CFF;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.standard-input-height{
+    line-height: 20px;
+    min-height: 38px;
 }
 
 .bg-bluekegreyish{

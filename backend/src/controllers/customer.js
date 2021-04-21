@@ -14,8 +14,9 @@ module.exports = {
 
             return res.status(200).send(data)
         }catch(err){
+            console.log(err.original.sqlMessage)
             if(err.original.code === 'ER_DUP_ENTRY'){
-                return helper.errorResponse(res, 'Customer already exists please check the details!', 422)
+                return helper.errorResponse(res, 'Customer\'s email has been taken by another customer', 422)
             }
             return helper.errorResponse(res)
         }

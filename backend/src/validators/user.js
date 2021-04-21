@@ -49,7 +49,7 @@ module.exports = {
         }
 
         return res.status(422).json({
-            errors: extractedErrors,
+            errors: errors,
         })
     },
 
