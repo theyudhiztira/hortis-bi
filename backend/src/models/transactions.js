@@ -20,6 +20,11 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'created_by',
                 as: 'creator_details'
             })
+            models.transactions.hasOne(models.customer, {
+                sourceKey: 'customer_id',
+                foreignKey: 'id',
+                as: 'customer_details'
+            })
         }
     };
     transactions.init({
@@ -30,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         amount_due: DataTypes.INTEGER,
         discount: DataTypes.INTEGER,
+        date: DataTypes.DATEONLY,
         created_by: DataTypes.INTEGER
     }, {
         sequelize,

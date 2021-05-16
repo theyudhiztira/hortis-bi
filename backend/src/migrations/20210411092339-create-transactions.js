@@ -19,6 +19,9 @@ module.exports = {
             discount: {
                 type: Sequelize.INTEGER
             },
+            date: {
+                type: Sequelize.DATEONLY
+            },
             created_by: {
                 type: Sequelize.INTEGER
             },

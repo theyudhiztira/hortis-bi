@@ -2,6 +2,7 @@ const model = require('../models')
 const { Op, Sequelize } = require('sequelize')
 const helper = require('../helpers/helpers')
 const moment = require('moment')
+const { db, sequelize } = require('../models')
 
 module.exports = {
     create: async (req, res) => {
@@ -12,7 +13,7 @@ module.exports = {
         })
 
         const pricing = await local.fetchPrice(productIds)
-        const recordTransaction = await local.recordTransaction(pricing, req.body.cart, req.body.customer_id, req.userData.id)
+        const recordTransaction = await local.recordTransaction(pricing, req.body.cart, req.body.customer_id, req.userData.id, req.body.date)
 
         return res.status(200).send(recordTransaction)
     },
@@ -35,6 +36,9 @@ module.exports = {
                         as: 'product_details',
                         attributes: ['name']
                     }
+                },{
+                    model: model.customer,
+                    as: 'customer_details'
                 }]
             });
 
@@ -48,46 +52,35 @@ module.exports = {
     },
 
     list: async (req, res) => {
-        let where = {};
-        if(req.query.from || req.query.to){
-            if(req.query.from && req.query.to){
-                where = {...where, created_at: {
-                    [Op.between]: [req.query.from, req.query.to]
-                }}
-            }else if(req.query.from && !req.query.to){
-                where = {...where, created_at: {
-                    [Op.gte]: req.query.from
-                }}
+        const {from, to, page, limit} = req.query
+        const {queryLimit, queryOffset} = local.limitOffset(page, limit)
+        
+        let where = "";
+        if(from || to){
+            if(from && to){
+                where += `where a.created_at between '${from}' and '${to}'`
+            }else if(from && !to){
+                where += `where a.created_at >= '${from}'`
             }else{
-                where = {...where, created_at: {
-                    [Op.lte]: req.query.to
-                }}
+                where += `where a.created_at <= '${to}'`
             }
         }
 
-        console.log(where, req.params)
 
         try{
-            const data = await model.transactions.findAll({
-                where: where,
-                hide: ['created_by'],
-                include: [{
-                    model: model.user.scope('ownership'),
-                    as: 'creator_details'
-                },{
-                    model: model.transaction_items,
-                    as: 'items',
-                    include: {
-                        model: model.product_entries,
-                        as: 'product_details',
-                        attributes: ['name']
-                    }
-                }]
+            const data = await sequelize.query(`select a.id, a.customer_id, a.amount_due, a.date, b.full_name, b.phone, b.email, a.created_by, a.created_at from transactions a left join customers b on a.customer_id = b.id ${where.length > 0 ? where : ''} limit ${queryOffset}, ${queryLimit}`, 
+            {
+                nest: true
             });
 
-            return res.status(data ? 200 : 404).send(data ? data : {
-                message: "Data not found!"
-            })
+            const totalData = await sequelize.query(`select COUNT(a.id) as total_rows from transactions a ${where.length > 0 ? where : ''}`, 
+            {
+                nest: true
+            });
+
+            const result = local.pageData(totalData[0].total_rows, page, limit)
+
+            return res.status(data ? 200 : 404).send({...result, data: data})
         }catch(err){
             console.error(err)
             return helper.errorResponse(res)
@@ -122,7 +115,7 @@ const local = exports = {
         return result
     },
 
-    recordTransaction: async (pricing, cart, customerId, userId) => {
+    recordTransaction: async (pricing, cart, customerId, userId, date) => {
         let amountDue = 0
 
         cart.map(item => {
@@ -132,7 +125,8 @@ const local = exports = {
         const headerData = {
             customer_id: customerId,
             amount_due: amountDue,
-            created_by: userId
+            created_by: userId,
+            date: date
         }
         
         const headerRecord = await model.transactions.create(headerData);
@@ -155,6 +149,20 @@ const local = exports = {
         const result = {...JSON.parse(JSON.stringify(headerRecord)), items: await Promise.all(items)}
 
         return result
+    },
+
+    limitOffset: (page, limit) => {
+        const queryLimit = limit ? parseInt(limit) : 3
+        const queryOffset = page ? (page-1) * limit : 0
+
+        return {queryLimit, queryOffset}
+    },
+
+    pageData: (totalData, page, limit) => {
+        const currentPage = page ? parseInt(page) : 1
+        const totalPages = Math.ceil(totalData / limit); 
+
+        return {currentPage, totalPages}
     }
 }
 
