@@ -4,7 +4,8 @@ module.exports = {
         "password": "root",
         "database": "hortis_bi",
         "host": "localhost",
-        "dialect": "mysql"
+        "dialect": "mysql",
+        "timezone": "+07:00"
     },
     "test": {
         "username": "root",

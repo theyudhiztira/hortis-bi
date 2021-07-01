@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@ant-design/icons": "^4.6.2",
         "@craco/craco": "^6.1.1",
         "@material-ui/core": "^4.11.4",
         "@material-ui/data-grid": "^4.0.0-alpha.26",
@@ -11,8 +12,10 @@
         "@testing-library/jest-dom": "^5.11.10",
         "@testing-library/react": "^11.2.6",
         "@testing-library/user-event": "^12.8.3",
+        "antd": "^4.16.2",
         "axios": "^0.21.1",
         "chart.js": "^3.2.1",
+        "chartjs-plugin-datalabels": "^1.0.0",
         "moment": "^2.29.1",
         "numeral": "^2.0.6",
         "react": "^17.0.2",
@@ -30,7 +33,8 @@
         "start": "craco start",
         "build": "craco build",
         "test": "craco test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "dev": "yarn start && cd ../backend && yarn start"
     },
     "eslintConfig": {
         "extends": [
@@ -53,7 +57,7 @@
     "devDependencies": {
         "@tailwindcss/postcss7-compat": "^2.1.0",
         "autoprefixer": "^9.8.6",
-        "postcss": "^7.0.35",
+        "postcss": ">=8.2.10",
         "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.0"
     }
 }

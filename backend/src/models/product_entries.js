@@ -23,13 +23,16 @@ module.exports = (sequelize, DataTypes) => {
     };
     product_entries.init({
         category_id: DataTypes.INTEGER,
+        sub_category_id: DataTypes.INTEGER,
         name: DataTypes.STRING,
         unit: {
             type: DataTypes.ENUM('pcs', 'kg', 'ltr'),
             allowNull: false
         },
-        price_per_unit_retail: DataTypes.INTEGER,
-        price_per_unit_reseller: DataTypes.INTEGER,
+        retail_price: DataTypes.INTEGER,
+        reseller1_price: DataTypes.INTEGER,
+        reseller2_price: DataTypes.INTEGER,
+        reseller3_price: DataTypes.INTEGER,
         stock: {
             type: DataTypes.INTEGER,
             allowNull: true,

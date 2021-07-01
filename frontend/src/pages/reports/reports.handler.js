@@ -19,6 +19,21 @@ const handlers = {
         }
     },
 
+    loadTableData: async (year) => {
+      try{
+        const getData = await apiCaller.get('table-data', {
+          params: {
+            year: moment(year).format('YYYY')
+          }
+        })
+
+        return getData.data
+      }catch(err){
+        console.log(err)
+        return false
+      }
+    },
+
     getDetails: async (transactionId) => {
         try{
             const getData = await apiCaller.get(`transaction/${transactionId}`)

@@ -1,0 +1,16 @@
+th{
+  padding: 9px;
+  color: white;
+  border: 1px solid black;
+}
+
+th:hover{
+  cursor: pointer;
+}
+
+tbody > tr > td {
+  text-align: center;
+  padding: 9px;
+  border: 1px solid black;
+  min-width: 113px;
+}

@@ -6,7 +6,6 @@ import {
     IoBarChartOutline,
     IoCartOutline,
     IoPeopleOutline,
-    IoCubeOutline,
     IoPower
 } from 'react-icons/io5'
 import { logoutService } from '../services/authServices';
@@ -22,11 +21,11 @@ const doLogout = (e) => {
     return (window.location.href = '/login');
 }
 
-const Navigation = () => {
+const Navigation = (props) => {
     const [showMobileMenu, setShowMobileMenu] = useState(false)
 
     return (
-        <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
+        <nav className={`md:left-0 md:top-0 ${!props.isFlex && 'md:block md:fixed'} md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6`}>
             <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
                 <button onClick={() => setShowMobileMenu(!showMobileMenu)} className="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent" type="button"><IoReorderThree /></button>
                 <img className="hidden md:block w-20 mx-auto" alt="hortis logo" src="https://lb-hortifarm.com/images/logo_lbh20_200.png"></img>
@@ -46,13 +45,10 @@ const Navigation = () => {
                             <Link to="/home" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoHomeOutline className="flex mr-2 text-sm opacity-75" /> Dashboard</Link>
                         </li>
                         <li className="items-center flex-row">
-                            <Link to="/transaction" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoCartOutline className="flex mr-2 text-sm opacity-75" /> Transactions</Link>
+                            <Link to="/report-new" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoBarChartOutline className="flex mr-2 text-sm opacity-75" /> Laporan</Link>
                         </li>
                         <li className="items-center flex-row">
-                            <Link to="/report" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoBarChartOutline className="flex mr-2 text-sm opacity-75" /> Reports</Link>
-                        </li>
-                        <li className="items-center flex-row">
-                            <Link to="/product" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoCubeOutline className="flex mr-2 text-sm opacity-75" /> Products</Link>
+                            <Link to="/transaction-new" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoCartOutline className="flex mr-2 text-sm opacity-75" /> Transaksi</Link>
                         </li>
                         <li className="items-center flex-row">
                             <Link to="/user" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoPeopleOutline className="flex mr-2 text-sm opacity-75" /> Users</Link>

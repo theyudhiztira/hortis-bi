@@ -25,19 +25,12 @@ module.exports = {
 
     get: async (req, res) => {
         try{
-            const data = await model.product_entries.findOne({
-                where: {
-                    id: req.params.id
-                },
-                hide: ['created_by'],
-                include: [{
-                    model: model.user.scope('ownership'),
-                    as: 'creator_details'
-                },
-                {
-                    model: model.product_categories.scope('categoryDetails'),
-                    as: 'category_details'
-                }]
+            const data = await sequelize.query(`select a.*, b.name as sub_category, c.name as category from product_entries a 
+            left join product_sub_categories b on a.sub_category_id = b.id
+            left join product_categories c on a.category_id = c.id
+            `, 
+            {
+                nest: true
             });
 
             return res.status(data ? 200 : 404).send(data ? data : {

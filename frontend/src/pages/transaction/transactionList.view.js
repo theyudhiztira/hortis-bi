@@ -47,7 +47,6 @@ class TransactionList extends Component {
     }
 
     openDetails = async (transactionId) => {
-        console.log(await handlers.getDetails(transactionId))
         const trxDetails = await handlers.getDetails(transactionId)
 
         this.setState({

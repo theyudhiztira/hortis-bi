@@ -5,18 +5,55 @@ const moment = require('moment')
 const { db, sequelize } = require('../models')
 
 module.exports = {
-    create: async (req, res) => {
-        let productIds = [];
+  create: async (req, res) => {
+    const transactionHt = {
+      amount_due: req.body.cart.map(cart => {
+        const subTotal = cart.price * cart.qty
+        return +subTotal
+      }).reduce((firstValue, secondValue) => firstValue + secondValue, 0),
+      date: req.body.date,
+      created_by: req.userData.id
+    }
+    
+    let transactionHtId = {};
+    try {
+      transactionHtId = await model.transactions.create(transactionHt)
+    } catch (error) {
+      return res.status(500).send({
+        status: false,
+        message: 'Failed when saving the tranaction header!'
+      })
+    }
 
-        (req.body.cart).map(v => {
-            return !productIds.includes(v.product_id) ? productIds = [...productIds, v.product_id] : false
+    await Promise.all(req.body.cart.map( async cart => {
+      const transactionDt = {
+        transaction_id: transactionHtId.id,
+        product: cart.details.id,
+        price: cart.price,
+        pricing_type: cart.priceGroup,
+        quantity: cart.qty,
+        created_by: req.userData.id
+      }
+      
+      try {
+        await model.transaction_items.create(transactionDt)
+      } catch (error) {
+        await model.transactions.destroy({
+          where: {
+            id: transactionHtId.id
+          }
         })
+        return res.status(500).send({
+          status: false,
+          message: 'Failed when saving the tranaction details!'
+        })
+      }
+    }));
 
-        const pricing = await local.fetchPrice(productIds)
-        const recordTransaction = await local.recordTransaction(pricing, req.body.cart, req.body.customer_id, req.userData.id, req.body.date)
-
-        return res.status(200).send(recordTransaction)
-    },
+    return res.status(200).send({
+      status: true
+    })
+  },
 
     get: async (req, res) => {
         try{
@@ -36,9 +73,6 @@ module.exports = {
                         as: 'product_details',
                         attributes: ['name']
                     }
-                },{
-                    model: model.customer,
-                    as: 'customer_details'
                 }]
             });
 
@@ -52,7 +86,7 @@ module.exports = {
     },
 
     list: async (req, res) => {
-        const {from, to, page, limit} = req.query
+        const {from, to, page, limit, date} = req.query
         const {queryLimit, queryOffset} = local.limitOffset(page, limit)
         
         let where = "";
@@ -66,25 +100,31 @@ module.exports = {
             }
         }
 
+        if(date){
+          where += `and a.created_at like '${date}%'`
+        }
+
 
         try{
-            const data = await sequelize.query(`select a.id, a.customer_id, a.amount_due, a.date, b.full_name, b.phone, b.email, a.created_by, a.created_at from transactions a left join customers b on a.customer_id = b.id ${where.length > 0 ? where : ''} limit ${queryOffset}, ${queryLimit}`, 
-            {
-                nest: true
-            });
+        //     const data = await sequelize.query(`select a.*, b.full_name from transactions a 
+        //     left join users b on a.created_by = b.id ${where.length > 0 ? where : ''} limit ${queryOffset}, ${queryLimit}`, 
+        //     {
+        //         nest: true
+        //     });
 
-            const totalData = await sequelize.query(`select COUNT(a.id) as total_rows from transactions a ${where.length > 0 ? where : ''}`, 
-            {
-                nest: true
-            });
+        //     const totalData = await sequelize.query(`select COUNT(a.id) as total_rows from transactions a ${where.length > 0 ? 'where '+where.replace('and ', '') : ''}`, 
+        //     {
+        //         nest: true
+        //     });
 
-            const result = local.pageData(totalData[0].total_rows, page, limit)
+        //     const result = local.pageData(totalData[0].total_rows, page, limit)
 
-            return res.status(data ? 200 : 404).send({...result, data: data})
+        //     return res.status(data ? 200 : 404).send({...result, data: data})
         }catch(err){
             console.error(err)
             return helper.errorResponse(res)
         }
+        
     }
 }
 
