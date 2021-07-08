@@ -9,7 +9,8 @@ import TransactionDetailsModal from './transactionDetailsModal'
 import { TransactionModalContext } from '../transactionModalContext'
 
 const TransactionTable = () => {
-  const date = useState(null)
+  //eslint-disable-next-line
+  const [date, setDate] = useState(null)
   const [data, setData] = useState([])
   const [totalPage, setTotalPage] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)

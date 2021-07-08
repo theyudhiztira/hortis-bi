@@ -13,6 +13,8 @@ import ReportNew from './pages/reportsNew'
 import ReportsSecondLayer from './pages/reportsSecondLayer'
 import ReportsThirdLayer from './pages/reportsThirdLayer'
 import 'antd/dist/antd.css'
+import Production from './pages/production'
+import Setup from './pages/setup'
 
 
 const App = () => {
@@ -26,10 +28,11 @@ const App = () => {
             {/* <PrivateRoute exact path='/transaction' component={Transaction} isAuthenticated={isAuthenticated} /> */}
             <PrivateRoute exact path='/transaction-new' component={TransactionNew} isAuthenticated={isAuthenticated} />
             <PrivateRoute exact path='/report-new' component={ReportNew} isAuthenticated={isAuthenticated} />
+            <PrivateRoute exact path='/setup' component={Setup} isAuthenticated={isAuthenticated} />
             <PrivateRoute exact path='/report-second/:data' component={ReportsSecondLayer} isAuthenticated={isAuthenticated} />
             <PrivateRoute exact path='/report-third/:data' component={ReportsThirdLayer} isAuthenticated={isAuthenticated} />
             
-            {/* <PrivateRoute exact path='/products' component={Products} isAuthenticated={isAuthenticated} /> */}
+            <PrivateRoute exact path='/production' component={Production} isAuthenticated={isAuthenticated} />
             <Redirect to={isAuthenticated ? '/home' : '/login'} />
         </Switch>
     </Router>);

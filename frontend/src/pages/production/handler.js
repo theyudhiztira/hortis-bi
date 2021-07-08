@@ -11,10 +11,21 @@ export const handlers = {
     }
   },
 
-  sendDataToServer: async (date, cart) => {
+  getCustomer: async () => {
     try{
-      await apiCaller.post('transaction', {
+      const customerData = await apiCaller.get('customer')
+
+      return [customerData.data, null]
+    }catch(err){
+      return [null, err]
+    }
+  },
+
+  sendDataToServer: async (date, cart, supplier) => {
+    try{
+      await apiCaller.post('productions', {
         date: date,
+        supplier: supplier,
         cart: cart
       })
 
@@ -26,7 +37,7 @@ export const handlers = {
 
   loadTransactionData: async (from, to, limit, page, date) => {
     try{
-      const getData = await apiCaller.get('transaction', {
+      const getData = await apiCaller.get('productions', {
         params: {
           from: from,
           to: to,
@@ -45,7 +56,7 @@ export const handlers = {
 
   fetchTransaction: async (id) => {
     try{
-      const getDetails = await apiCaller.get(`transaction/${id}`)
+      const getDetails = await apiCaller.get(`productions/${id}`)
 
       return [getDetails.data, null]
     }catch(err){

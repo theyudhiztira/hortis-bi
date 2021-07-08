@@ -5,15 +5,18 @@ import { handlers } from '../handler'
 import './style.css'
 import { IoEye } from 'react-icons/io5'
 import Pagination from '@material-ui/lab/Pagination'
-import TransactionDetailsModal from './transactionDetailsModal'
-import { TransactionModalContext } from '../transactionModalContext'
+// import TransactionDetailsModal from './transactionDetailsModal'
+import { ProductionModalContext } from '../context/productionModalContext'
+import ProductionDetailsModal from './productionDetailsModal'
 
-const TransactionTable = () => {
-  const date = useState(null)
+
+const ProductionTable = () => {
+  //eslint-disable-next-line
+  const [date, setDate] = useState(null)
   const [data, setData] = useState([])
   const [totalPage, setTotalPage] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
-  const context = React.useContext(TransactionModalContext)
+  const context = React.useContext(ProductionModalContext)
 
   useEffect(() => {
     const dataFetcher = async () => {
@@ -45,7 +48,7 @@ const TransactionTable = () => {
   return (
     <React.Fragment>
       <div className='bg-white grid grid-cols-4 rounded-md shadow-md p-5 gap-3 mt-5'>
-        <h1 className="text-2xl col-span-4">Daftar Transaksi</h1>
+        <h1 className="text-2xl col-span-4">Daftar Produksi</h1>
         
         <div className='col-span-4 grid grid-cols-2 gap-3'>
           {/* <div className='col-span-2 justify-end'>
@@ -59,8 +62,8 @@ const TransactionTable = () => {
             <table className='w-full'>
               <thead className='bg-gray-500'>
                 <tr>
-                  <th>ID Transaksi</th>
-                  <th>Total (Rp.)</th>
+                  <th>ID Produksi</th>
+                  <th>Supplier</th>
                   <th>Tanggal</th>
                   <th>Operator</th>
                   <th>Aksi</th>
@@ -71,8 +74,8 @@ const TransactionTable = () => {
                   data.map(dt => {
                     return (<tr key={dt.id}>
                       <td>{dt.id}</td>
-                      <td>Rp. {numeral(dt.amount_due).format('0,0')}</td>
-                      <td>{moment(dt.created_at).format('YYYY-MM-DD HH:mm')}</td>
+                      <td>{dt.supplier_name}</td>
+                      <td>{moment(dt.date).format('YYYY-MM-DD')}</td>
                       <td>{dt.full_name}</td>
                       <td><IoEye className='m-auto text-2xl cursor-pointer text-green-500' onClick={() => viewTransaction(dt.id)}  /></td>
                       {/* <td>{ checkTime(dt.created_at) > 0 ? '-' : <IoEye className='m-auto text-2xl cursor-pointer text-green-500'  /> }</td> */}
@@ -90,9 +93,9 @@ const TransactionTable = () => {
           </div>
         </div>
       </div>
-      {context.transaction.id && <TransactionDetailsModal />}
+      {context.transaction.id && <ProductionDetailsModal />}
     </React.Fragment>
   )
 }
 
-export default TransactionTable
+export default ProductionTable

@@ -1,34 +1,31 @@
-import React from 'react';
-import { ProductModalContext } from '../productModalContext';
-import { Select, Radio, Space, InputNumber } from 'antd';
-import numeral from 'numeral';
-const { Option } = Select;
+import React from 'react'
+import { ItemModalContext } from '../context/itemModalContext'
+import { Select, InputNumber } from 'antd'
 
+const { Option } = Select
 
-export const ItemAddModal = () => {
-  const [selected, setSelected] = React.useState({})
-  const [price, setPrice] = React.useState(0)
+const ItemModal = () => {
+  const [selectedProduct, setSelectedProduct] = React.useState({})
   const [qty, setQty] = React.useState(0)
-  const context = React.useContext(ProductModalContext)
+  const context = React.useContext(ItemModalContext)
   let currentCart = context.cart
-  
+
   const onSelect = data => {
     const selectedProduct = context.product.filter(product => {
       return product.id === data
     })
 
     setQty(1)
-    return setSelected(selectedProduct[0])
+    return setSelectedProduct(selectedProduct[0])
   }
 
   const closeModal = () => {
     context.setIsOpen(false)
-    setSelected({})
+    setSelectedProduct({})
     setQty(0)
   }
 
-  return (
-    <div className={`${context.isOpen ? 'block' : 'hidden'} fixed z-10 inset-0 overflow-y-scroll block transition-all duration-150`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  return (<div className={`${context.isOpen ? 'block' : 'hidden'} fixed z-10 inset-0 overflow-y-scroll block transition-all duration-150`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
           <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -40,7 +37,7 @@ export const ItemAddModal = () => {
                 <Select
                   showSearch
                   // style={{ width: 200 }}
-                  value={selected ? selected.id : null}
+                  value={selectedProduct ? selectedProduct.id : null}
                   placeholder="Pilih barang"
                   optionFilterProp="children"
                   onChange={onSelect}
@@ -57,45 +54,46 @@ export const ItemAddModal = () => {
                 </Select>
                 {/* <Select className="text-sm" isClearable={true} placeholder="Select product ..." options={products} maxMenuHeight={100} /> */}
               </div>
-              <div className="flex flex-col col-span-2">
-                  <label className="text-xs">Price</label>
-                  <Radio.Group disabled={!selected.retail_price} onChange={element => setPrice(element.target.value)}>
-                    <Space direction="vertical">
-                      <Radio value={`${selected.retail_price}|RETAIL`}>Rp. {selected.retail_price ? numeral(selected.retail_price).format('0,0') : 0} - Retail</Radio>
-                      <Radio value={`${selected.reseller1_price}|RESELLER1`}>Rp. {selected.reseller1_price ? numeral(selected.reseller1_price).format('0,0') : 0} - Reseller 1</Radio>
-                      <Radio value={`${selected.reseller2_price}|RESELLER2`}>Rp. {selected.reseller2_price ? numeral(selected.reseller2_price).format('0,0') : 0} - Reseller 2</Radio>
-                      <Radio value={`${selected.reseller3_price}|RESELLER3`}>Rp. {selected.reseller3_price ? numeral(selected.reseller3_price).format('0,0') : 0} - Reseller 3</Radio>
-                    </Space>
-                  </Radio.Group>
-                </div>
               <div className="flex flex-col">
                 <label className="text-xs">Satuan</label>
                 <b>
-                  {selected.unit ? selected.unit : <b className='font-bold text-gray-200 cursor-not-allowed'>Tidak Tersedia</b>}
+                  {selectedProduct.unit ? selectedProduct.unit : <b className='font-bold text-gray-200 cursor-not-allowed'>Tidak Tersedia</b>}
                 </b>
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Kuantitas</label>
-                <InputNumber className='w-full' min={1} value={qty} onChange={value => setQty(value)} disabled={!selected.unit} />
+                <InputNumber className='w-full' min={1} value={qty} onChange={value => setQty(value)} disabled={!selectedProduct.unit} />
               </div>
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button type='button' onClick={() => {
-              if(!price){
-                return alert('Pilih harga untuk melanjutkan!')
+              const existingCart = currentCart.map(cart => {
+                return cart.details.id
+              })
+              
+              if(existingCart.includes(selectedProduct.id)){
+                currentCart = currentCart.map(cart => {
+                  if(cart.details.id === selectedProduct.id){
+                    const newQty = cart.qty + qty
+                    
+                    cart.qty=newQty
+                  }
+
+                  return cart
+                })
+              }else{
+                currentCart = [...currentCart, {
+                  key: selectedProduct.id,
+                  details: selectedProduct,
+                  qty: qty
+                }]
               }
-              currentCart = [...currentCart, {
-                key: `${price}|${selected.id}`,
-                details: selected,
-                price: price.split('|')[0],
-                priceGroup: price.split('|')[1],
-                qty: qty
-              }]
+              
               
               context.setCart(currentCart)
               closeModal()
-            }} className={`${selected.id ? 'block' : 'hidden'} w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm bg-green-500 hover:bg-green-700`}>
+            }} className={`${selectedProduct.id ? 'block' : 'hidden'} w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm bg-green-500 hover:bg-green-700`}>
               Tambah
             </button>
             <button type="button" onClick={() => {
@@ -106,6 +104,7 @@ export const ItemAddModal = () => {
           </div>
           </div>
         </div>
-    </div>
-  )
+    </div>)
 }
+
+export default ItemModal

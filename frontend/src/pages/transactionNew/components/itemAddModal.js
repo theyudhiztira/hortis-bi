@@ -61,7 +61,7 @@ export const ItemAddModal = () => {
                   <label className="text-xs">Price</label>
                   <Radio.Group disabled={!selected.retail_price} onChange={element => setPrice(element.target.value)}>
                     <Space direction="vertical">
-                      <Radio value={`${selected.retail_price}|RETAIL`}>Rp. {selected.retail_price ? numeral(selected.retail_price).format('0,0') : 0} - Retail</Radio>
+                      <Radio value={`${selected.retail_price}|RETAIL`}>Rp. {selected.retail_price ? numeral(selected.retail_price).format('0,0') : 0} - Outlet</Radio>
                       <Radio value={`${selected.reseller1_price}|RESELLER1`}>Rp. {selected.reseller1_price ? numeral(selected.reseller1_price).format('0,0') : 0} - Reseller 1</Radio>
                       <Radio value={`${selected.reseller2_price}|RESELLER2`}>Rp. {selected.reseller2_price ? numeral(selected.reseller2_price).format('0,0') : 0} - Reseller 2</Radio>
                       <Radio value={`${selected.reseller3_price}|RESELLER3`}>Rp. {selected.reseller3_price ? numeral(selected.reseller3_price).format('0,0') : 0} - Reseller 3</Radio>

@@ -6,7 +6,9 @@ import {
     IoBarChartOutline,
     IoCartOutline,
     IoPeopleOutline,
-    IoPower
+    IoPower,
+    IoDownloadOutline,
+    IoCogOutline
 } from 'react-icons/io5'
 import { logoutService } from '../services/authServices';
 import {
@@ -45,10 +47,16 @@ const Navigation = (props) => {
                             <Link to="/home" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoHomeOutline className="flex mr-2 text-sm opacity-75" /> Dashboard</Link>
                         </li>
                         <li className="items-center flex-row">
-                            <Link to="/report-new" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoBarChartOutline className="flex mr-2 text-sm opacity-75" /> Laporan</Link>
+                            <Link to="/transaction-new" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoCartOutline className="flex mr-2 text-sm opacity-75" /> Penjualan (Rp)</Link>
                         </li>
                         <li className="items-center flex-row">
-                            <Link to="/transaction-new" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoCartOutline className="flex mr-2 text-sm opacity-75" /> Transaksi</Link>
+                            <Link to="/production" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoDownloadOutline className="flex mr-2 text-sm opacity-75" /> Produksi (Kg)</Link>
+                        </li>
+                        <li className="items-center flex-row">
+                            <Link to="/setup" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoCogOutline className="flex mr-2 text-sm opacity-75" /> Setup Harga</Link>
+                        </li>
+                        <li className="items-center flex-row">
+                            <Link to="/report-new" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoBarChartOutline className="flex mr-2 text-sm opacity-75" /> Laporan</Link>
                         </li>
                         <li className="items-center flex-row">
                             <Link to="/user" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoPeopleOutline className="flex mr-2 text-sm opacity-75" /> Users</Link>

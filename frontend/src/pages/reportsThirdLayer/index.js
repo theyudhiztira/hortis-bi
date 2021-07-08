@@ -144,11 +144,11 @@ const ReportsThirdLayer = (props) => {
                 <th colSpan={2}>SDBI</th>
               </tr>
               <tr>
-                <th>Jml</th>
+                <th>Fisik</th>
                 <th>Rupiah</th>
-                <th>Jml</th>
+                <th>Fisik</th>
                 <th>Rupiah</th>
-                <th>Jml</th>
+                <th>Fisik</th>
                 <th>Rupiah</th>
               </tr>
             </thead>

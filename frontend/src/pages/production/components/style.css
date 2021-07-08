@@ -13,3 +13,11 @@ tbody > tr > td {
   border-bottom: 1px solid grey;
   min-width: 113px;
 }
+
+.ant-select-selector{
+  line-height: 1.5715 !important;
+}
+
+.ant-select-item:hover{
+  cursor: pointer !important;
+}

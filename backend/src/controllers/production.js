@@ -6,19 +6,19 @@ const { db, sequelize } = require('../models')
 
 module.exports = {
   create: async (req, res) => {
-    const transactionHt = {
-      amount_due: req.body.cart.map(cart => {
-        const subTotal = cart.price * cart.qty
-        return +subTotal
-      }).reduce((firstValue, secondValue) => firstValue + secondValue, 0),
+    const productionHt = {
+      supplier: req.body.supplier,
       date: req.body.date,
       created_by: req.userData.id
     }
     
-    let transactionHtId = {};
+    let productionHtId = {};
+      console.log(productionHt)
+
     try {
-      transactionHtId = await model.transactions.create(transactionHt)
+      productionHtId = await model.productions.create(productionHt)
     } catch (error) {
+      console.error(error)
       return res.status(500).send({
         status: false,
         message: 'Failed when saving the tranaction header!'
@@ -26,21 +26,20 @@ module.exports = {
     }
 
     await Promise.all(req.body.cart.map( async cart => {
-      const transactionDt = {
-        transaction_id: transactionHtId.id,
+      const productionDt = {
+        production_id: productionHtId.id,
         product: cart.details.id,
-        price: cart.price,
-        pricing_type: cart.priceGroup,
         quantity: cart.qty,
+        unit: cart.details.unit,
         created_by: req.userData.id
       }
       
       try {
-        await model.transaction_items.create(transactionDt)
+        await model.production_details.create(productionDt)
       } catch (error) {
-        await model.transactions.destroy({
+        await model.productions.destroy({
           where: {
-            id: transactionHtId.id
+            id: productionHtId.id
           }
         })
         return res.status(500).send({
@@ -57,7 +56,7 @@ module.exports = {
 
     get: async (req, res) => {
         try{
-            const data = await model.transactions.findOne({
+            const data = await model.productions.findOne({
                 where: {
                     id: req.params.id
                 },
@@ -66,13 +65,17 @@ module.exports = {
                     model: model.user.scope('ownership'),
                     as: 'creator_details'
                 },{
-                    model: model.transaction_items,
+                    model: model.production_details,
                     as: 'items',
                     include: {
                         model: model.product_entries,
                         as: 'product_details',
-                        attributes: ['name']
+                        attributes: ['name'],
+                        required: true
                     }
+                },{
+                  model: model.customer,
+                  as: 'supplier_details'
                 }]
             });
 
@@ -106,13 +109,15 @@ module.exports = {
 
 
         try{
-            const data = await sequelize.query(`select a.*, b.full_name from transactions a 
-            left join users b on a.created_by = b.id ${where.length > 0 ? where : ''} limit ${queryOffset}, ${queryLimit}`, 
+            const data = await sequelize.query(`select a.*, b.full_name, c.full_name as supplier_name from production a 
+            left join users b on a.created_by = b.id
+            left join customers c on a.supplier = c.id
+            ${where.length > 0 ? where : ''} limit ${queryOffset}, ${queryLimit}`, 
             {
                 nest: true
             });
 
-            const totalData = await sequelize.query(`select COUNT(a.id) as total_rows from transactions a ${where.length > 0 ? 'where '+where.replace('and ', '') : ''}`, 
+            const totalData = await sequelize.query(`select COUNT(a.id) as total_rows from production a ${where.length > 0 ? 'where '+where.replace('and ', '') : ''}`, 
             {
                 nest: true
             });
@@ -169,12 +174,12 @@ const local = exports = {
             date: date
         }
         
-        const headerRecord = await model.transactions.create(headerData);
+        const headerRecord = await model.productions.create(headerData);
         let bodyRecord = [];
         
         console.log(bodyRecord)
         const items = cart.map(async item => {
-            newBodyData = await model.transaction_items.create({
+            newBodyData = await model.production_details.create({
                 transaction_id: headerRecord.id,
                 product: item.product_id,
                 price: pricing[item.product_id].retail_price,

@@ -1,12 +1,12 @@
 import React from 'react'
-import { TransactionModalContext } from '../transactionModalContext'
+import { ProductionModalContext } from '../context/productionModalContext'
 import moment from 'moment'
 import numeral from 'numeral'
 import './style.css'
 import Swal from 'sweetalert2'
 
-const TransactionDetailsModal = () => {
-  const context = React.useContext(TransactionModalContext)
+const ProductionDetailsModal = () => {
+  const context = React.useContext(ProductionModalContext)
   const transaction = context.transaction
 
   const checkTime = (time) => {
@@ -49,16 +49,20 @@ const TransactionDetailsModal = () => {
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="flex flex-col col-span-2">
-                <label className="text-xs">ID Transaksi</label>
+                <label className="text-xs">ID Produksi</label>
                 <div>{transaction.id}</div>
               </div>
               <div className="flex flex-col col-span-2">
-                <label className="text-xs">Tanggal</label>
-                <div>{moment(transaction.created_at).format('YYYY-MM-DD HH:mm')}</div>
+                <label className="text-xs">Supplier</label>
+                <div>{transaction.supplier_details.full_name}</div>
               </div>
               <div className="flex flex-col col-span-2">
-                <label className="text-xs">Total</label>
-                <div>Rp. {numeral(transaction.amount_due).format('0,0')}</div>
+                <label className="text-xs">Tanggal Transaksi</label>
+                <div>{transaction.date}</div>
+              </div>
+              <div className="flex flex-col col-span-2">
+                <label className="text-xs">Tanggal Input</label>
+                <div>{moment(transaction.created_at).format('YYYY-MM-DD HH:mm')}</div>
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Operator</label>
@@ -71,9 +75,8 @@ const TransactionDetailsModal = () => {
                     <thead>
                       <tr className='bg-gray-500'>
                         <th className='text-center'>Produk</th>
-                        <th className='text-center'>Harga</th>
-                        <th className='text-center'>Tipe Harga</th>
                         <th className='text-center'>Jumlah</th>
+                        <th className='text-center'>Unit</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -81,9 +84,8 @@ const TransactionDetailsModal = () => {
                         transaction.items.map(item => {
                           return (<tr>
                             <td>{item.product_details.name}</td>
-                            <td>Rp. {numeral(item.price).format('0,0')}</td>
-                            <td>{item.pricing_type}</td>
                             <td>{item.quantity}</td>
+                            <td>{item.unit}</td>
                           </tr>)
                         })
                       }
@@ -110,4 +112,4 @@ const TransactionDetailsModal = () => {
     </div>)
 }
 
-export default TransactionDetailsModal
+export default ProductionDetailsModal

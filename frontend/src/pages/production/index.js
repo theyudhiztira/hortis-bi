@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import Navigation from '../../components/navigation';
-import TransactionBox from './components/transactionBox';
-import { ProductModalProvider } from './productModalContext';
-import { TransactionModalProvider } from './transactionModalContext';
-import TransactionTable from './components/transactionTable';
+import React from 'react'
+import Navigation from '../../components/navigation'
+import ProductionBox from './components/productionBox'
+import ProductionTable from './components/productionTable'
+import './components/style.css'
+import { ItemModalProvider } from './context/itemModalContext'
+import { ProductionModalProvider } from './context/productionModalContext'
 
-const TransactionNew = () => {
-
-  return (<>
-    <div className="w-full bg-gray-200 h-screen">
-      <Navigation isFlex={false} />
-      <section className="w-full inline-block p-2 overflow-y-auto md:p-11 md:pl-80">
-        <ProductModalProvider>
-          <TransactionBox />
-        </ProductModalProvider>
-        <TransactionModalProvider>
-          <TransactionTable />
-        </TransactionModalProvider>  
-      </section>
-    </div>
-  </>)
+const Production = () => {
+  
+  return (<div className="w-full bg-gray-200 h-screen">
+    <Navigation isFlex={false} />
+    <section className="w-full inline-block p-2 overflow-y-auto md:p-11 md:pl-80">
+      <ItemModalProvider>
+        <ProductionBox />
+      </ItemModalProvider>
+      <ProductionModalProvider>
+        <ProductionTable />
+      </ProductionModalProvider>
+    </section>
+  </div>)
 }
 
-export default TransactionNew
+export default Production

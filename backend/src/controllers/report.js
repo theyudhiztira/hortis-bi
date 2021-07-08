@@ -534,6 +534,16 @@ module.exports = {
       where b.date BETWEEN '${moment().format('YYYY')}-01-01' and '${moment().format('YYYY-MM-DD')}'
       group by periode
       ${where}`, {nest:true})
+
+      summaryData = await sequelize.query(`select DATE_FORMAT(b.date, '%Y-%m') as periode, ${sumCase.join(',')}
+      from transaction_items as a
+      left join transactions as b on a.transaction_id = b.id
+      left join product_entries as c on a.product = c.id
+      left join product_categories as d on c.category_id = d.id
+      left join product_sub_categories as e on c.sub_category_id = e.id
+      where b.date BETWEEN '${moment().format('YYYY')}-01-01' and '${moment().format('YYYY-MM-DD')}'
+      group by periode
+      ${where}`, {nest:true})
     } catch (error) {
       console.log(error)
     }
@@ -619,7 +629,8 @@ module.exports = {
         hi: hiCard,
         sdhi: sdhiCard,
         sdbi: sdbiCard
-      }
+      },
+      summaryData: summaryData
     })
   },
 }

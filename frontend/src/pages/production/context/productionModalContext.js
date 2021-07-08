@@ -1,19 +1,19 @@
 import React from 'react';
 
-export const TransactionModalContext = React.createContext()
+export const ProductionModalContext = React.createContext()
 
-export const TransactionModalProvider = ({ children }) => {
+export const ProductionModalProvider = ({ children }) => {
   const [isOpen, setIsOpen] = React.useState(false)
   const [transaction, setTransaction] = React.useState({})
 
   return (
-    <TransactionModalContext.Provider value={{
+    <ProductionModalContext.Provider value={{
       isOpen, 
       setIsOpen,
       transaction,
       setTransaction
     }}>
       {children}
-    </TransactionModalContext.Provider>
+    </ProductionModalContext.Provider>
   )
 }

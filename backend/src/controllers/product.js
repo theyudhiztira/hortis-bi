@@ -1,4 +1,5 @@
 const model = require('../models')
+const { db, sequelize } = require('../models')
 const { Op, Sequelize } = require('sequelize')
 const helper = require('../helpers/helpers')
 
@@ -28,6 +29,7 @@ module.exports = {
             const data = await sequelize.query(`select a.*, b.name as sub_category, c.name as category from product_entries a 
             left join product_sub_categories b on a.sub_category_id = b.id
             left join product_categories c on a.category_id = c.id
+            where a.id = ${req.params.id}
             `, 
             {
                 nest: true
@@ -51,6 +53,9 @@ module.exports = {
                 }, {
                     model: model.product_categories.scope('categoryDetails'),
                     as: 'category_details'
+                }, {
+                  model: model.product_sub_categories.scope('subCategoryDetails'),
+                  as: 'sub_category_details'
                 }]
             });
 
@@ -68,7 +73,7 @@ module.exports = {
 
         try{
             const allowedToEdit = [
-                'category_id', 'name', 'unit', 'price_per_unit_retail', 'price_per_unit_reseller', 'stock', 'is_unlimited'
+                'category_id', 'name', 'unit', 'retail_price', 'reseller1_price', 'reseller2_price', 'reseller3_price', 'stock', 'is_unlimited'
             ];
             
             (Object.keys(body)).map(v => {
@@ -93,6 +98,9 @@ module.exports = {
                 }, {
                     model: model.product_categories.scope('categoryDetails'),
                     as: 'category_details'
+                }, {
+                  model: model.product_sub_categories.scope('subCategoryDetails'),
+                  as: 'sub_category_details'
                 }]
             })
 

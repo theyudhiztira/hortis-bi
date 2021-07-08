@@ -69,11 +69,11 @@ const TransactionBox = () => {
   return (
     <React.Fragment>
       <div className='bg-white grid grid-cols-4 rounded-md shadow-md p-5 gap-3'>
-        <h1 className="text-2xl col-span-4">Buat Transaksi</h1>
+        <h1 className="text-2xl col-span-4">Transaksi Penjualan</h1>
         <DatePicker dateFormat="yyyy-MM-dd" className="border border-gray-300 rounded px-3 text-sm standard-input-height ring-offset-blue-700 col-span-4" placeholder='Pilih tanggal' onChange={(val) => setDate(val.format('YYYY-MM-DD'))} />
         <div className='col-span-4 grid grid-cols-2 gap-3'>
           <div className='flex ant-row-space-between col-span-2' style={{alignItems: 'center'}}>
-            <h4 className='text-md bold mt-2 mb-0'>Data Transaksi</h4>
+            <h4 className='text-md bold mt-2 mb-0'>Data Penjualan</h4>
             <button className="bg-green-500 rounded-md px-3 py-2 text-white" onClick={() => {
               context.setIsOpen(true)
             }}>+ Tambah Barang</button>
@@ -99,7 +99,7 @@ const TransactionBox = () => {
                     <td>{cart.details.name}</td>
                     <td>{cart.details.category_details.name}</td>
                     <td>Rp. {numeral(cart.price).format('0,0')}</td>
-                    <td>{cart.priceGroup}</td>
+                    <td>{cart.priceGroup === 'RETAIL' ? 'OUTLET' : cart.priceGroup}</td>
                     <td>{cart.details.unit}</td>
                     <td>{cart.qty}</td>
                     <td>Rp. {numeral(cart.price * cart.qty).format('0,0')}</td>
