@@ -9,6 +9,7 @@ export const ItemAddModal = () => {
   const [selected, setSelected] = React.useState({})
   const [price, setPrice] = React.useState(0)
   const [qty, setQty] = React.useState(0)
+  const [subtotal, setSubtotal] = React.useState(0)
   const context = React.useContext(ProductModalContext)
   let currentCart = context.cart
   
@@ -25,6 +26,32 @@ export const ItemAddModal = () => {
     context.setIsOpen(false)
     setSelected({})
     setQty(0)
+    setSubtotal(0)
+    setPrice(0)
+  }
+
+  const changeQty = (value) => {
+    setQty(value === null ? 0 : value)
+
+    if(value !== null){
+      if(value.length < 1){
+        setSubtotal(0)
+      }
+
+      console.log(price)
+
+      if(price){
+        const selectedPrice = price.split('|')[0]
+        setSubtotal(selectedPrice * value)
+      }
+    }
+  }
+
+  const selectPrice = (value) => {
+    const selectedPrice = value.split('|')[0]
+
+    setPrice(value)
+    return setSubtotal(selectedPrice * qty)
   }
 
   return (
@@ -59,12 +86,12 @@ export const ItemAddModal = () => {
               </div>
               <div className="flex flex-col col-span-2">
                   <label className="text-xs">Price</label>
-                  <Radio.Group disabled={!selected.retail_price} onChange={element => setPrice(element.target.value)}>
+                  <Radio.Group disabled={!selected.retail_price} onChange={element => selectPrice(element.target.value)}>
                     <Space direction="vertical">
-                      <Radio value={`${selected.retail_price}|RETAIL`}>Rp. {selected.retail_price ? numeral(selected.retail_price).format('0,0') : 0} - Outlet</Radio>
-                      <Radio value={`${selected.reseller1_price}|RESELLER1`}>Rp. {selected.reseller1_price ? numeral(selected.reseller1_price).format('0,0') : 0} - Reseller 1</Radio>
-                      <Radio value={`${selected.reseller2_price}|RESELLER2`}>Rp. {selected.reseller2_price ? numeral(selected.reseller2_price).format('0,0') : 0} - Reseller 2</Radio>
-                      <Radio value={`${selected.reseller3_price}|RESELLER3`}>Rp. {selected.reseller3_price ? numeral(selected.reseller3_price).format('0,0') : 0} - Reseller 3</Radio>
+                      <Radio value={`${selected.retail_price}|RETAIL`}>Rp. {selected.retail_price ? numeral(selected.retail_price).format('0,0.[0000]') : 0} - Outlet</Radio>
+                      <Radio value={`${selected.reseller1_price}|RESELLER1`}>Rp. {selected.reseller1_price ? numeral(selected.reseller1_price).format('0,0.[0000]') : 0} - Reseller 1</Radio>
+                      <Radio value={`${selected.reseller2_price}|RESELLER2`}>Rp. {selected.reseller2_price ? numeral(selected.reseller2_price).format('0,0.[0000]') : 0} - Reseller 2</Radio>
+                      <Radio value={`${selected.reseller3_price}|RESELLER3`}>Rp. {selected.reseller3_price ? numeral(selected.reseller3_price).format('0,0.[0000]') : 0} - Reseller 3</Radio>
                     </Space>
                   </Radio.Group>
                 </div>
@@ -76,7 +103,11 @@ export const ItemAddModal = () => {
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Kuantitas</label>
-                <InputNumber className='w-full' min={1} value={qty} onChange={value => setQty(value)} disabled={!selected.unit} />
+                <InputNumber className='w-full' min={1} value={qty} onChange={value => changeQty(value)} disabled={!selected.unit} />
+              </div>
+              <div className="flex flex-col col-span-2">
+                <label className="text-xs">Subtotal</label>
+                {price ? `Rp. ${numeral(subtotal).format('0,0.[0000]')}` : 'Rp. 0'}
               </div>
             </div>
           </div>

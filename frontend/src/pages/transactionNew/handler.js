@@ -11,6 +11,16 @@ export const handlers = {
     }
   },
 
+  deleteDataFromServer: async (id) => {
+    try{
+      const deleteProduct = await apiCaller.delete('transaction/'+id)
+
+      return [deleteProduct.data, null]
+    }catch(err){
+      return [null, err]
+    }
+  },
+
   sendDataToServer: async (date, cart) => {
     try{
       await apiCaller.post('transaction', {

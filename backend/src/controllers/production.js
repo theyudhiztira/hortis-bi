@@ -90,7 +90,6 @@ module.exports = {
 
     list: async (req, res) => {
         const {from, to, page, limit, date} = req.query
-        const {queryLimit, queryOffset} = local.limitOffset(page, limit)
         
         let where = "";
         if(from || to){
@@ -112,19 +111,12 @@ module.exports = {
             const data = await sequelize.query(`select a.*, b.full_name, c.full_name as supplier_name from production a 
             left join users b on a.created_by = b.id
             left join customers c on a.supplier = c.id
-            ${where.length > 0 ? where : ''} limit ${queryOffset}, ${queryLimit}`, 
+            ${where.length > 0 ? where : ''}`, 
             {
                 nest: true
             });
 
-            const totalData = await sequelize.query(`select COUNT(a.id) as total_rows from production a ${where.length > 0 ? 'where '+where.replace('and ', '') : ''}`, 
-            {
-                nest: true
-            });
-
-            const result = local.pageData(totalData[0].total_rows, page, limit)
-
-            return res.status(data ? 200 : 404).send({...result, data: data})
+            return res.status(data ? 200 : 404).send({data: data})
         }catch(err){
             console.error(err)
             return helper.errorResponse(res)

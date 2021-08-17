@@ -3,22 +3,26 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import { handlers } from '../handler'
 import './style.css'
-import { IoEye } from 'react-icons/io5'
-import Pagination from '@material-ui/lab/Pagination'
 import TransactionDetailsModal from './transactionDetailsModal'
 import { TransactionModalContext } from '../transactionModalContext'
+import DataTable from 'react-data-table-component'
+import { DatePicker } from 'antd'
 
 const TransactionTable = () => {
   //eslint-disable-next-line
   const [date, setDate] = useState(null)
   const [data, setData] = useState([])
+  const [from, setFrom] = useState(null)
+  const [to, setTo] = useState(null)
   const [totalPage, setTotalPage] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const context = React.useContext(TransactionModalContext)
 
   useEffect(() => {
     const dataFetcher = async () => {
-      const [result, error] = await handlers.loadTransactionData(null, null, 10, currentPage, date)
+      const fromDate = from ? moment(from).format('YYYY-MM-DD') : null
+      const toDate = to ? moment(to).format('YYYY-MM-DD') : null
+      const [result, error] = await handlers.loadTransactionData(fromDate, toDate, 10, currentPage, date)
 
       if(error){
         return alert('Ada masalah silahkan hubungi tim kami.')
@@ -30,7 +34,7 @@ const TransactionTable = () => {
     }
 
     dataFetcher()
-  }, [currentPage, date])
+  }, [currentPage, date, from, to])
 
   const viewTransaction = async (id) => {
     const [result, error] = await handlers.fetchTransaction(id)
@@ -56,40 +60,71 @@ const TransactionTable = () => {
               }
             }} />
           </div> */}
-          <div className='col-span-2 mt-2 overflow-x-auto'>
-            <table className='w-full'>
-              <thead className='bg-gray-500'>
-                <tr>
-                  <th>ID Transaksi</th>
-                  <th>Total (Rp.)</th>
-                  <th>Tanggal</th>
-                  <th>Tenggal Pembuatan</th>
-                  <th>Operator</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  data.map(dt => {
-                    return (<tr key={dt.id}>
-                      <td>{dt.id}</td>
-                      <td>Rp. {numeral(dt.amount_due).format('0,0')}</td>
-                      <td>{moment(dt.date).format('YYYY-MM-DD')}</td>
-                      <td>{moment(dt.created_at).format('YYYY-MM-DD')}</td>
-                      <td>{dt.full_name}</td>
-                      <td><IoEye className='m-auto text-2xl cursor-pointer text-green-500' onClick={() => viewTransaction(dt.id)}  /></td>
-                      {/* <td>{ checkTime(dt.created_at) > 0 ? '-' : <IoEye className='m-auto text-2xl cursor-pointer text-green-500'  /> }</td> */}
-                    </tr>)
-                  })
-                }
-                {
-                  data.length < 1 && <tr><td colSpan={5}><b className='font-bold text-red-500'>Transaksi Kosong</b></td></tr>
-                }
-              </tbody>
-            </table>
+          <div className='col-span-2'>
+            <DatePicker
+              placeholder='Dari Tanggal'
+              dateFormat="yyyy-MM-dd"
+              selected={from} 
+              onChange={date => setFrom(date)}
+              allowClear
+            />
+
+            <DatePicker
+              placeholder='Sampai Tanggal'
+              dateFormat="yyyy-MM-dd"
+              style={{
+                marginLeft: 15
+              }}
+              allowClear
+              selected={to} 
+              onChange={date => setTo(date)}
+            />
           </div>
-          <div className='col-span-2 mt-2'>
-            <Pagination count={totalPage} shape="rounded" variant="outlined" color="primary" onChange={(ev, page) => setCurrentPage(page)} />
+          <div className='col-span-2 mt-2 overflow-x-auto'>
+            <DataTable 
+              pagination
+              striped
+              pointerOnHover
+              highlightOnHover
+              onRowClicked={(row) => viewTransaction(row.id)}
+              data={data}
+              columns={[
+                {
+                  name: "ID Transaksi",
+                  selector: (row) => row['id'],
+                  sortable: true,
+                  maxWidth: '13%',
+                  center: true
+                },
+                {
+                  name: "Total (Rp.)",
+                  selector: (row) => row['amount_due'],
+                  format: (row) => "Rp. "+numeral(row.amount_due).format('0,0.[0000]'),
+                  sortable: true,
+                  center: true
+                },
+                {
+                  name: "Tgl. Transaksi",
+                  selector: (row) => row['date'],
+                  sortable: true,
+                  center: true
+                },
+                {
+                  name: "Tgl. Pencatatan",
+                  selector: (row) => row['created_at'],
+                  format: (row) => moment(row.created_at).format('YYYY-MM-DD HH:mm'),
+                  sortable: true,
+                  center: true
+                },
+                {
+                  name: "Operator",
+                  selector: (row) => row['full_name'],
+                  sortable: true,
+                  center: true
+                }
+              ]}
+            />
+            
           </div>
         </div>
       </div>

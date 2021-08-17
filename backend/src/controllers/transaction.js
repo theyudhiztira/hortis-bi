@@ -5,6 +5,35 @@ const moment = require('moment')
 const { db, sequelize } = require('../models')
 
 module.exports = {
+  delete: async (req, res) => {
+    const trxId = req.params.id
+
+    try{
+      await model.transactions.destroy({
+        where: {
+          id: trxId
+        }
+      })
+
+      await model.transaction_items.destroy({
+        where: {
+          transaction_id: trxId
+        }
+      })
+    }catch(err){
+      return res.status(500).send({
+        status: false,
+        message: 'Error when running the query!'
+      })
+    }
+
+    return res.status(200).send({
+      status: true,
+      message: `Transaction ID : ${trxId} removed ok`
+    })
+
+  },
+
   create: async (req, res) => {
     const transactionHt = {
       amount_due: req.body.cart.map(cart => {
@@ -76,6 +105,8 @@ module.exports = {
                 }]
             });
 
+            console.log(data)
+
             return res.status(data ? 200 : 404).send(data ? data : {
                 message: "Data not found!"
             })
@@ -86,17 +117,16 @@ module.exports = {
     },
 
     list: async (req, res) => {
-        const {from, to, page, limit, date} = req.query
-        const {queryLimit, queryOffset} = local.limitOffset(page, limit)
+        const {from, to, date} = req.query
         
         let where = "";
         if(from || to){
             if(from && to){
-                where += `where a.created_at between '${from}' and '${to}'`
+                where += `where a.date between '${from}' and '${to}'`
             }else if(from && !to){
-                where += `where a.created_at >= '${from}'`
+                where += `where a.date >= '${from}'`
             }else{
-                where += `where a.created_at <= '${to}'`
+                where += `where a.date <= '${to}'`
             }
         }
 
@@ -107,19 +137,12 @@ module.exports = {
 
         try{
             const data = await sequelize.query(`select a.*, b.full_name from transactions a 
-            left join users b on a.created_by = b.id ${where.length > 0 ? where : ''} limit ${queryOffset}, ${queryLimit}`, 
+            left join users b on a.created_by = b.id ${where.length > 0 ? where : ''}`, 
             {
                 nest: true
             });
 
-            const totalData = await sequelize.query(`select COUNT(a.id) as total_rows from transactions a ${where.length > 0 ? 'where '+where.replace('and ', '') : ''}`, 
-            {
-                nest: true
-            });
-
-            const result = local.pageData(totalData[0].total_rows, page, limit)
-
-            return res.status(data ? 200 : 404).send({...result, data: data})
+            return res.status(data ? 200 : 404).send({data: data})
         }catch(err){
             console.error(err)
             return helper.errorResponse(res)

@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     transaction_items.init({
         transaction_id: DataTypes.INTEGER,
         product: DataTypes.INTEGER,
-        price: DataTypes.INTEGER,
+        price: DataTypes.DECIMAL(16,4),
         pricing_type: DataTypes.STRING,
         quantity: DataTypes.INTEGER,
         created_by: DataTypes.INTEGER

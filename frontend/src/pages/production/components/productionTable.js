@@ -1,13 +1,11 @@
-import numeral from 'numeral'
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import { handlers } from '../handler'
 import './style.css'
-import { IoEye } from 'react-icons/io5'
-import Pagination from '@material-ui/lab/Pagination'
 // import TransactionDetailsModal from './transactionDetailsModal'
 import { ProductionModalContext } from '../context/productionModalContext'
 import ProductionDetailsModal from './productionDetailsModal'
+import DataTable from 'react-data-table-component'
 
 
 const ProductionTable = () => {
@@ -51,45 +49,47 @@ const ProductionTable = () => {
         <h1 className="text-2xl col-span-4">Daftar Produksi</h1>
         
         <div className='col-span-4 grid grid-cols-2 gap-3'>
-          {/* <div className='col-span-2 justify-end'>
-            <DatePicker placeholder='Pilih tanggal' className='right-0' onChange={(date) => {
-              if(date){
-                setDate(date.format('YYYY-MM-DD'))
-              }
-            }} />
-          </div> */}
+          
           <div className='col-span-2 mt-2 overflow-x-auto'>
-            <table className='w-full'>
-              <thead className='bg-gray-500'>
-                <tr>
-                  <th>ID Produksi</th>
-                  <th>Supplier</th>
-                  <th>Tanggal</th>
-                  <th>Operator</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
+            <DataTable
+              className='w-full'
+              data={data}
+              pagination
+              striped
+              highlightOnHover
+              pointerOnHover
+              onRowClicked={(row) => viewTransaction(row.id)}
+              columns={[
                 {
-                  data.map(dt => {
-                    return (<tr key={dt.id}>
-                      <td>{dt.id}</td>
-                      <td>{dt.supplier_name}</td>
-                      <td>{moment(dt.date).format('YYYY-MM-DD')}</td>
-                      <td>{dt.full_name}</td>
-                      <td><IoEye className='m-auto text-2xl cursor-pointer text-green-500' onClick={() => viewTransaction(dt.id)}  /></td>
-                      {/* <td>{ checkTime(dt.created_at) > 0 ? '-' : <IoEye className='m-auto text-2xl cursor-pointer text-green-500'  /> }</td> */}
-                    </tr>)
-                  })
-                }
+                  name: "Prod. ID",
+                  selector: (row) => row['id'],
+                  sortable: true,
+                  width: '10%',
+                  center: true
+                },
                 {
-                  data.length < 1 && <tr><td colSpan={5}><b className='font-bold text-red-500'>Transaksi Kosong</b></td></tr>
-                }
-              </tbody>
-            </table>
-          </div>
-          <div className='col-span-2 mt-2'>
-            <Pagination count={totalPage} shape="rounded" variant="outlined" color="primary" onChange={(ev, page) => setCurrentPage(page)} />
+                  name: "Supplier",
+                  selector: (row) => row['supplier_name'],
+                  sortable: true,
+                  center: true
+                },
+                {
+                  name: "Tanggal",
+                  selector: (row) => row['created_at'],
+                  format: (row) => moment(row.created_at).format("YYYY-MM-DD"),
+                  sortable: true,
+                  width: '20%',
+                  center: true
+                },
+                {
+                  name: 'Operator',
+                  selector: (row) => row['full_name'],
+                  sortable: true,
+                  center: true
+                },
+
+              ]}
+            />
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     transactions.init({
-        amount_due: DataTypes.INTEGER,
+        amount_due: DataTypes.DECIMAL(16,4),
         discount: DataTypes.INTEGER,
         date: DataTypes.DATEONLY,
         created_by: DataTypes.INTEGER

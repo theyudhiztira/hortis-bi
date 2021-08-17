@@ -31,7 +31,7 @@ class TransactionList extends Component {
             return tableElement = [...tableElement, (<tr key={value.id}>
                 <td className="text-sm p-2 font-normal text-center">{value.id}</td>
                 <td className="text-sm p-2 font-normal text-center">{value.customer_id ? value.full_name : "-"}</td>
-                <td className="text-sm p-2 font-normal text-center">{numeral(value.amount_due).format('0,0')}</td>
+                <td className="text-sm p-2 font-normal text-center">{numeral(value.amount_due).format('0,0.[0000]')}</td>
                 <td className="text-sm p-2 font-normal text-center">{value.date}</td>
                 <td className="text-sm p-2 font-normal text-center">
                     <button className="p-3 bg-blue-600 rounded text-white hover:bg-blue-700" onClick={() => this.openDetails(value.id)}><IoEye /></button>
@@ -82,15 +82,15 @@ class TransactionList extends Component {
                                 trxDetails.items.map((item, index) => {
                                     return (<tr class="bg-white hover:bg-gray-100" key={index}>
                                         <td class="text-center py-2 text-sm px-2">{item.product_details.name}</td>
-                                        <td class="text-center py-2 text-sm px-2">{numeral(item.price).format('0,0')}</td>
+                                        <td class="text-center py-2 text-sm px-2">{numeral(item.price).format('0,0.[0000]')}</td>
                                         <td class="text-center py-2 text-sm px-2">{item.quantity}</td>
-                                        <td class="text-center py-2 text-sm px-2 text-right">{numeral(item.price * item.quantity).format('0,0')}</td>
+                                        <td class="text-center py-2 text-sm px-2 text-right">{numeral(item.price * item.quantity).format('0,0.[0000]')}</td>
                                     </tr>)
                                 })
                             }
                         <tr className="bg-gray-500">
                             <td colSpan="3" className="text-white text-sm text-right p-2">Grand Total</td>
-                            <td colSpan="3" className="text-white text-sm text-right p-2">{numeral(trxDetails.amount_due).format('0,0')}</td>
+                            <td colSpan="3" className="text-white text-sm text-right p-2">{numeral(trxDetails.amount_due).format('0,0.[0000]')}</td>
                         </tr>
                     </tbody>
                     </table>

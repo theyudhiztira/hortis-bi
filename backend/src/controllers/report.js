@@ -23,7 +23,7 @@ const parseLineChart = (data) => {
     let parsedInt = {}
     Object.keys(data).map(dataKey => {
       if(dataKey !== 'periode'){
-        return parsedInt = {...parsedInt, [dataKey]: parseInt(data[dataKey])}
+        return parsedInt = {...parsedInt, [dataKey]: parseFloat(data[dataKey])}
       }
 
       return parsedInt = {...parsedInt, periode: data.periode}
@@ -67,7 +67,7 @@ const parsePieChart = (data) => {
     let parsedInt = {}
     Object.keys(data).map(dataKey => {
       if(dataKey !== 'periode'){
-        return parsedInt = {...parsedInt, [dataKey]: parseInt(data[dataKey])}
+        return parsedInt = {...parsedInt, [dataKey]: parseFloat(data[dataKey])}
       }
 
       return parsedInt = {...parsedInt, periode: data.periode}
@@ -191,7 +191,7 @@ module.exports = {
               
               return tableContent = [
                 ...tableContent, 
-                [{text: Object.keys(product)[0], alignment: 'left'}, {text: numeral(detail.quantity).format('0,0'), alignment: 'right'}, {text: numeral(detail.income).format('0,0'), alignment: 'right'}],
+                [{text: Object.keys(product)[0], alignment: 'left'}, {text: numeral(detail.quantity).format('0,0.[0000]'), alignment: 'right'}, {text: numeral(detail.income).format('0,0.[0000]'), alignment: 'right'}],
               ]
             })
           }else{
@@ -206,13 +206,13 @@ module.exports = {
 
           return tableContent = [
             ...tableContent, 
-            [{text: 'Subtotal', style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}, {text: numeral(quantitySubTotal).format('0,0'), style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}, {text: numeral(incomeSubTotal).format('0,0'), style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}],
+            [{text: 'Subtotal', style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}, {text: numeral(quantitySubTotal).format('0,0.[0000]'), style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}, {text: numeral(incomeSubTotal).format('0,0.[0000]'), style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}],
           ]
         })
     })
 
     tableContent = [...tableContent, 
-      [{text: `Grand Total of ${year}`, style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}, {text: numeral(quantityTotal).format('0,0'), style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}, {text: numeral(incomeTotal).format('0,0'), style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}],
+      [{text: `Grand Total of ${year}`, style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}, {text: numeral(quantityTotal).format('0,0.[0000]'), style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}, {text: numeral(incomeTotal).format('0,0.[0000]'), style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}],
     ]
 
     const pdfContent = {
@@ -573,7 +573,7 @@ module.exports = {
       delete data.periode
 
       Object.keys(data).map(xData => {
-        sdbiResult[xData]+=parseInt(data[xData])
+        sdbiResult[xData]+=parseFloat(data[xData])
       })
       
       return data
@@ -586,7 +586,7 @@ module.exports = {
         let parsedInt = {}
         Object.keys(hiData).map(dataKey => {
           if(dataKey !== 'periode'){
-            return parsedInt = {...parsedInt, [dataKey]: parseInt(hiData[dataKey])}
+            return parsedInt = {...parsedInt, [dataKey]: parseFloat(hiData[dataKey])}
           }
         })
         
@@ -601,7 +601,7 @@ module.exports = {
         let parsedInt = {}
         Object.keys(sdhiData).map(dataKey => {
           if(dataKey !== 'periode'){
-            return parsedInt = {...parsedInt, [dataKey]: parseInt(sdhiData[dataKey])}
+            return parsedInt = {...parsedInt, [dataKey]: parseFloat(sdhiData[dataKey])}
           }
         })
         

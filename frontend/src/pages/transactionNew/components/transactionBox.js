@@ -98,11 +98,11 @@ const TransactionBox = () => {
                     return (<tr key={index}>
                     <td>{cart.details.name}</td>
                     <td>{cart.details.category_details.name}</td>
-                    <td>Rp. {numeral(cart.price).format('0,0')}</td>
+                    <td>Rp. {numeral(cart.price).format('0,0.[0000]')}</td>
                     <td>{cart.priceGroup === 'RETAIL' ? 'OUTLET' : cart.priceGroup}</td>
                     <td>{cart.details.unit}</td>
                     <td>{cart.qty}</td>
-                    <td>Rp. {numeral(cart.price * cart.qty).format('0,0')}</td>
+                    <td>Rp. {numeral(cart.price * cart.qty).format('0,0.[0000]')}</td>
                     <td className='text-center'><IoTrash onClick={() => removeItem(index)} className='m-auto text-red-700 cursor-pointer' title='Delete' style={{
                       width: 25,
                       height: 25
@@ -122,7 +122,7 @@ const TransactionBox = () => {
                       numeral(context.cart.map(cart => {
                         const subTotal = cart.price * cart.qty
                         return +subTotal
-                      }).reduce((firstValue, secondValue) => firstValue + secondValue, 0)).format('0,0')
+                      }).reduce((firstValue, secondValue) => firstValue + secondValue, 0)).format('0,0.[0000]')
                     }
                   </td>
                 </tr>

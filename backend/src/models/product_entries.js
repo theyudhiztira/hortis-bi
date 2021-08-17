@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('pcs', 'kg', 'ltr'),
             allowNull: false
         },
-        retail_price: DataTypes.INTEGER,
+        retail_price: DataTypes.DECIMAL(16,4),
         reseller1_price: DataTypes.INTEGER,
         reseller2_price: DataTypes.INTEGER,
         reseller3_price: DataTypes.INTEGER,

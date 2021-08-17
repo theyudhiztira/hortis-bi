@@ -1,9 +1,9 @@
 module.exports = {
     "development": {
-        "username": "root",
-        "password": "root",
-        "database": "hortis_bi",
-        "host": "localhost",
+        "username": "bayu",
+        "password": "xopwi7-husSap-nunnub",
+        "database": "vox_bi",
+        "host": "myvios.cloud",
         "dialect": "mysql",
         "timezone": "+07:00"
     },
@@ -15,11 +15,12 @@ module.exports = {
         "dialect": "mysql"
     },
     "production": {
-        "username": "root",
-        "password": null,
-        "database": "database_production",
-        "host": "127.0.0.1",
-        "dialect": "mysql"
+        "username": "bayu",
+        "password": "xopwi7-husSap-nunnub",
+        "database": "vox_bi",
+        "host": "myvios.cloud",
+        "dialect": "mysql",
+        "timezone": "+07:00"
     },
     "use_env_variable": false
 }

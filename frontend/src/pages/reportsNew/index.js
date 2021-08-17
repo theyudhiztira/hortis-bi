@@ -61,11 +61,11 @@ const ReportsNew = () => {
       return (<tr key={key}>
         <td onClick={() => history.push(`/report-second/${data}`)} className='cursor-pointer'>{data}</td>
         <td>{tableData.hi[data+'_qty']}</td>
-        <td>{numeral(tableData.hi[data+'_amount']).format('0,0')}</td>
+        <td>{numeral(tableData.hi[data+'_amount']).format('0,0.[0000]')}</td>
         <td>{tableData.sdhi[data+'_qty']}</td>
-        <td>{numeral(tableData.sdhi[data+'_amount']).format('0,0')}</td>
+        <td>{numeral(tableData.sdhi[data+'_amount']).format('0,0.[0000]')}</td>
         <td>{tableData.sdbi[data+'_qty']}</td>
-        <td>{numeral(tableData.sdbi[data+'_amount']).format('0,0')}</td>
+        <td>{numeral(tableData.sdbi[data+'_amount']).format('0,0.[0000]')}</td>
       </tr>)
     })
 
@@ -99,13 +99,13 @@ const ReportsNew = () => {
 
         fisik = [...fisik, (<td style={{
           minWidth: 153
-        }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_qty`]).format('0,0') : 0}</td>)]
+        }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_qty`]).format('0,0.[0000]') : 0}</td>)]
         rupiah = [...rupiah, (<td style={{
           minWidth: 153
-        }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_amount`]).format('0,0') : 0}</td>)]
+        }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_amount`]).format('0,0.[0000]') : 0}</td>)]
       }
       let tableRow = (<React.Fragment>
-      <tr>
+      <tr className='bg-gray-300'>
         <td colSpan={13} className='text-left'>{data}</td>
       </tr>
       <tr>
@@ -169,19 +169,19 @@ const ReportsNew = () => {
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
             <h2 className='text-lg font-semibold'>Total Hari Ini</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-5xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0') : 0}</h1>
+              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[0000]') : 0}</h1>
             </div>
           </div>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
             <h2 className='text-lg font-semibold'>Total Sampai Dengan Hari Ini</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-5xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdhi).format('0,0') : 0}</h1>
+              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdhi).format('0,0.[0000]') : 0}</h1>
             </div>
           </div>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
             <h2 className='text-lg font-semibold'>Total Sampai Dengan Bulan Ini</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-5xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0') : 0}</h1>
+              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[0000]') : 0}</h1>
             </div>
           </div>
         </div>
@@ -190,29 +190,31 @@ const ReportsNew = () => {
           height: 'auto'
         }}>
           <h1 className='text-2xl font-semibold'>Detail Transaksi</h1>
-          <table className='w-full'>
-            <thead className='bg-gray-500'>
-              <tr>
-                <th rowSpan={2}>Produk</th>
-                <th colSpan={2}>HI</th>
-                <th colSpan={2}>SDHI</th>
-                <th colSpan={2}>SDBI</th>
-              </tr>
-              <tr>
-                <th>Fisik</th>
-                <th>Rupiah</th>
-                <th>Fisik</th>
-                <th>Rupiah</th>
-                <th>Fisik</th>
-                <th>Rupiah</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                Object.keys(textReport).length > 0 && parseTableData()
-              }
-            </tbody>
-          </table>
+          <div className='w-full overflow-x-scroll'>
+            <table className='w-full'>
+              <thead className='bg-gray-500'>
+                <tr>
+                  <th rowSpan={2}>Produk</th>
+                  <th colSpan={2}>HI</th>
+                  <th colSpan={2}>SDHI</th>
+                  <th colSpan={2}>SDBI</th>
+                </tr>
+                <tr>
+                  <th>Fisik</th>
+                  <th>Rupiah</th>
+                  <th>Fisik</th>
+                  <th>Rupiah</th>
+                  <th>Fisik</th>
+                  <th>Rupiah</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  Object.keys(textReport).length > 0 && parseTableData()
+                }
+              </tbody>
+            </table>
+          </div>
           <div className='w-full overflow-x-scroll'>
             <table className='w-full mt-3'>
               <thead className='bg-gray-500'>
