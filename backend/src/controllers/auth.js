@@ -5,8 +5,6 @@ const moment = require('moment');
 
 exports.login = async (req, res) => {
     let body = req.body;
-    
-    console.log(body)
 
     const findAgent = await model.user
     .findOne({
@@ -46,7 +44,7 @@ exports.login = async (req, res) => {
                 role: findAgent.role,
                 full_name: findAgent.full_name
             }, process.env.JWT_KEY, {
-                expiresIn: "24h"
+                expiresIn: "10d"
             });
 
             delete findAgent.password;
