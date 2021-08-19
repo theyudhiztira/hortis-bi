@@ -37,8 +37,8 @@ module.exports = {
   create: async (req, res) => {
     const transactionHt = {
       amount_due: req.body.cart.map(cart => {
-        const subTotal = cart.price * cart.qty
-        return +subTotal
+        const subTotal = parseFloat(cart.price) * parseFloat(cart.qty)
+        return +parseFloat(subTotal)
       }).reduce((firstValue, secondValue) => firstValue + secondValue, 0),
       date: req.body.date,
       created_by: req.userData.id

@@ -54,7 +54,11 @@ const TransactionDetailsModal = () => {
                 <div>{transaction.id}</div>
               </div>
               <div className="flex flex-col col-span-2">
-                <label className="text-xs">Tanggal</label>
+                <label className="text-xs">Tanggal Transaksi</label>
+                <div>{moment(transaction.date).format('YYYY-MM-DD')}</div>
+              </div>
+              <div className="flex flex-col col-span-2">
+                <label className="text-xs">Tanggal Pencatatan</label>
                 <div>{moment(transaction.created_at).format('YYYY-MM-DD HH:mm')}</div>
               </div>
               <div className="flex flex-col col-span-2">
@@ -83,7 +87,7 @@ const TransactionDetailsModal = () => {
                           return (<tr>
                             <td>{item.product_details.name}</td>
                             <td>Rp. {numeral(item.price).format('0,0.[0000]')}</td>
-                            <td>{item.pricing_type}</td>
+                            <td>{numeral(item.pricing_type).format('0,0.[0000]')}</td>
                             <td>{item.quantity}</td>
                           </tr>)
                         })
