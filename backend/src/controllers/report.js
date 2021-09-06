@@ -91,25 +91,34 @@ const parsePieChart = (data) => {
     })
   })
   
+  const finalData = categories.map(categoryValue => {
+    let totalData = 0
+    newObject.filter(value => value.category_name !== categoryValue).map(value => {
+      return totalData+=value[categoryValue]
+    })
+
+    return totalData
+  })
+  
+  const overAllData = finalData.reduce((a, b) => a + b, 0)
+  const percentage = finalData.map(value => {
+    return (parseFloat(value) / parseFloat(overAllData)) * 100
+  })
 
   const result = {
-    labels: categories,
+    labels: categories.map((v, i) => {
+      return `${v} - (${numeral(percentage[i]).format('0,0.[00]')}%)`
+    }),
     datasets: [
       {
         // label: '',
-        data: categories.map(categoryValue => {
-          let totalData = 0
-          newObject.filter(value => value.category_name !== categoryValue).map(value => {
-            return totalData+=value[categoryValue]
-          })
-
-          return totalData
-        }),
+        data: finalData,
         backgroundColor: color,
         borderColor: color,
         borderWidth: 1,
       },
     ],
+    percentage: ''
   }
 
   return result

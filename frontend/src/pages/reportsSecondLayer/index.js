@@ -153,8 +153,9 @@ const ReportsSecondLayer = (props) => {
           <h1 className="text-2xl font-bold col-span-4">Porsi Transaksi</h1>
           <Pie data={pieChart} height={331} options={{
             onClick: (ev, el) => {
+              const label = pieChart.labels[el[0]['index']]
               if(Object.keys(pieChart).length > 0){
-                return history.push('/report-third/'+pieChart.labels[el[0]['index']])
+                return history.push('/report-third/'+label.split(' - (')[0])
               }
             },
             maintainAspectRatio: false,
