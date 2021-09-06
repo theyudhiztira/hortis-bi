@@ -9,11 +9,13 @@ module.exports = {
             const data = await model.product_entries.create({
                 name: req.body.name,
                 category_id: req.body.category_id,
+                sub_category_id: req.body.sub_category_id,
                 name: req.body.name,
                 unit: req.body.unit,
-                price_per_unit_retail: req.body.price_per_unit_retail,
-                price_per_unit_reseller: req.body.price_per_unit_reseller,
-                stock: req.body.stock,
+                reseller1_price: req.body.reseller1_price,
+                reseller2_price: req.body.reseller2_price,
+                reseller3_price: req.body.reseller3_price,
+                stock: 0,
                 created_by: req.userData.id
             })
 
@@ -73,7 +75,7 @@ module.exports = {
 
         try{
             const allowedToEdit = [
-                'category_id', 'name', 'unit', 'retail_price', 'reseller1_price', 'reseller2_price', 'reseller3_price', 'stock', 'is_unlimited'
+                'category_id', 'sub_category_id', 'name', 'unit', 'retail_price', 'reseller1_price', 'reseller2_price', 'reseller3_price', 'stock', 'is_unlimited'
             ];
             
             (Object.keys(body)).map(v => {

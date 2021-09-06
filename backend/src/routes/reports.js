@@ -7,6 +7,8 @@ module.exports = (app) => {
     app.get('/download-report-pdf', controller.downloadPDFReport)
     app.get('/table-data', checkAuth.verifyToken, checkAuth.adminOnly, controller.tableData)
     app.get('/first-line-chart', controller.firstLineChart)
+    app.get('/daily-chart', controller.getDailyChart)
+    app.get('/production-report', controller.productionReport)
     app.get('/first-pie-chart', controller.firstPieChart)
     app.get('/first-text-report', controller.firstTextReport)
 }

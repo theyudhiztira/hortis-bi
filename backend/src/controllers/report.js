@@ -402,6 +402,76 @@ module.exports = {
     return res.status(200).send(finalData)
   },
 
+  getDailyChart: async (req, res) => {
+    const where = ''
+    let {type, year, mode} = req.query
+    let sumCase = []
+    let allPeriod = []
+    let category = []
+    let data = []
+
+    if(year){
+      year+='-'+moment().format('MM')
+    }
+
+    for (let index = 1; index <= moment().daysInMonth(); index++) {
+      allPeriod = [...allPeriod, `${year ? year : moment().format('YYYY-MM')}-${('0' + index).slice(-2)}`]
+    }
+
+    try {
+      let getCategories = [];
+
+      switch (mode) {
+        case 'product_sub_categories':
+          getCategories = await local.getSubCategory(type)
+          mode = 'e'
+          break;
+        case 'product_entries':
+          getCategories = await local.getProductEntries(type)
+          mode = 'c'
+          break;
+        default:
+          getCategories = await local.getCategories()
+          mode = 'd'
+          break;
+      }
+
+      category = getCategories.map(category => {
+        sumCase = [...sumCase, `SUM(CASE 
+        WHEN ${mode}.name = '${category.name}'
+            THEN a.quantity * a.price 
+            ELSE 0 
+        END) AS '${category.name}'`]
+        return category.name
+      })
+      
+      data = await sequelize.query(`select DATE_FORMAT(b.date, '%Y-%m-%d') as periode, ${sumCase.join(',')}
+      from transaction_items as a
+      left join transactions as b on a.transaction_id = b.id
+      left join product_entries as c on a.product = c.id
+      left join product_categories as d on c.category_id = d.id
+      left join product_sub_categories as e on c.sub_category_id = e.id
+      where b.date like '${year ? year : moment().format('YYYY-MM')}%'
+      group by periode
+      ${where}`, {nest:true})
+    } catch (error) {
+      console.log(error)
+    }
+
+    allPeriod.forEach(period => {
+      const findData = Object.values(data).find(item => item.periode === period)
+      let emptyData = {periode: period, ...category.reduce((acc,curr) => (acc[curr] = 0,acc),{})}
+
+      if(!findData){
+        data = [...data, emptyData]
+      }
+    })
+
+    const finalData = parseLineChart(Object.values(data))
+
+    return res.status(200).send(finalData)
+  },
+
   firstPieChart: async (req, res) => {
     const where = ''
     let {type, year, mode} = req.query
@@ -576,6 +646,177 @@ module.exports = {
     getCategoriesData.map(category => {
       dataTemplate = {...sdbiResult, [category.name+'_amount']:0, [category.name+'_qty']:0}
       return sdbiResult = {...sdbiResult, [category.name+'_amount']:0, [category.name+'_qty']:0}
+    })
+
+    sdbiData = sdbiData.map(data => {
+      delete data.periode
+
+      Object.keys(data).map(xData => {
+        sdbiResult[xData]+=parseFloat(data[xData])
+      })
+      
+      return data
+    })
+
+    sdbiData = sdbiResult
+    
+    if(hiData.length > 0){
+      hiData = hiData.map(hiData => {
+        let parsedInt = {}
+        Object.keys(hiData).map(dataKey => {
+          if(dataKey !== 'periode'){
+            return parsedInt = {...parsedInt, [dataKey]: parseFloat(hiData[dataKey])}
+          }
+        })
+        
+        return parsedInt
+      })[0]
+    }else{
+      hiData = dataTemplate
+    }
+
+    if(sdhiData.length > 0){
+      sdhiData = sdhiData.map(sdhiData => {
+        let parsedInt = {}
+        Object.keys(sdhiData).map(dataKey => {
+          if(dataKey !== 'periode'){
+            return parsedInt = {...parsedInt, [dataKey]: parseFloat(sdhiData[dataKey])}
+          }
+        })
+        
+        return parsedInt
+      })[0]
+    }else{
+      sdhiData = dataTemplate
+    }
+
+    let hiCard = 0
+    let sdhiCard = 0
+    let sdbiCard = 0
+
+    Object.keys(hiData).filter(key => key.split('_')[1] === 'amount').map(key => hiCard+=hiData[key])
+    Object.keys(sdhiData).filter(key => key.split('_')[1] === 'amount').map(key => sdhiCard+=sdhiData[key])
+    Object.keys(sdbiData).filter(key => key.split('_')[1] === 'amount').map(key => sdbiCard+=sdbiData[key])
+
+    return res.status(200).send({
+      tableData: {
+        hi: hiData,
+        sdhi: sdhiData,
+        sdbi: sdbiData
+      },
+      cardData: {
+        hi: hiCard,
+        sdhi: sdhiCard,
+        sdbi: sdbiCard
+      },
+      summaryData: summaryData
+    })
+  },
+
+  productionReport: async (req, res) => {
+    const where = ''
+    let {type, year, mode} = req.query
+    let sumCase = []
+    let allPeriod = []
+    let category = []
+    let hiData = []
+    let sdhiData = []
+    let sdbiData = []
+
+    for (let index = 1; index <= 12; index++) {
+      allPeriod = [...allPeriod, `${year ? year : moment().format('YYYY')}-${('0' + index).slice(-2)}`]
+    }
+
+    try {
+      let getCategories = []
+      let queryMode = 'xxx'
+
+      switch (mode) {
+        case 'product_sub_categories':
+          getCategories = await local.getSubCategory(type)
+          queryMode = 'e'
+          break;
+        case 'product_entries':
+          getCategories = await local.getProductEntries(type)
+          queryMode = 'c'
+          break;
+        default:
+          getCategories = await local.getCategories()
+          queryMode = 'd'
+          break;
+      }
+
+      category = getCategories.map(category => {
+        sumCase = [...sumCase, `SUM(CASE 
+        WHEN ${queryMode}.name = '${category.name}'
+            THEN a.quantity
+            ELSE 0 
+        END) AS '${category.name}_qty'`]
+        return category.name
+      })
+      
+      hiData = await sequelize.query(`select DATE_FORMAT(b.date, '%Y-%m') as periode, ${sumCase.join(',')}
+      from production_details as a
+      left join production as b on a.production_id = b.id
+      left join product_entries as c on a.product = c.id
+      left join product_categories as d on c.category_id = d.id
+      left join product_sub_categories as e on c.sub_category_id = e.id
+      where b.date = '${moment().format('YYYY-MM-DD')}'
+      group by periode
+      ${where}`, {nest:true})
+
+      sdhiData = await sequelize.query(`select DATE_FORMAT(b.date, '%Y-%m') as periode, ${sumCase.join(',')}
+      from production_details as a
+      left join production as b on a.production_id = b.id
+      left join product_entries as c on a.product = c.id
+      left join product_categories as d on c.category_id = d.id
+      left join product_sub_categories as e on c.sub_category_id = e.id
+      where b.date BETWEEN '${moment().format('YYYY-MM')}-01' and '${moment().format('YYYY-MM-DD')}'
+      group by periode
+      ${where}`, {nest:true})
+
+      sdbiData = await sequelize.query(`select DATE_FORMAT(b.date, '%Y-%m') as periode, ${sumCase.join(',')}
+      from production_details as a
+      left join production as b on a.production_id = b.id
+      left join product_entries as c on a.product = c.id
+      left join product_categories as d on c.category_id = d.id
+      left join product_sub_categories as e on c.sub_category_id = e.id
+      where b.date BETWEEN '${moment().format('YYYY')}-01-01' and '${moment().format('YYYY-MM-DD')}'
+      group by periode
+      ${where}`, {nest:true})
+
+      summaryData = await sequelize.query(`select DATE_FORMAT(b.date, '%Y-%m') as periode, ${sumCase.join(',')}
+      from production_details as a
+      left join production as b on a.production_id = b.id
+      left join product_entries as c on a.product = c.id
+      left join product_categories as d on c.category_id = d.id
+      left join product_sub_categories as e on c.sub_category_id = e.id
+      where b.date BETWEEN '${moment().format('YYYY')}-01-01' and '${moment().format('YYYY-MM-DD')}'
+      group by periode
+      ${where}`, {nest:true})
+    } catch (error) {
+      console.log(error)
+    }
+
+    let getCategoriesData = [];
+
+    switch (mode) {
+      case 'product_sub_categories':
+        getCategoriesData = await local.getSubCategory(type)
+        break;
+      case 'product_entries':
+        getCategoriesData = await local.getProductEntries(type)
+        break;
+      default:
+        getCategoriesData = await local.getCategories()
+        break;
+    }
+
+    let sdbiResult = {}
+    let dataTemplate = {}
+    getCategoriesData.map(category => {
+      dataTemplate = {...sdbiResult, [category.name+'_qty']:0}
+      return sdbiResult = {...sdbiResult, [category.name+'_qty']:0}
     })
 
     sdbiData = sdbiData.map(data => {

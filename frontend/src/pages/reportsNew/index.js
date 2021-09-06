@@ -39,14 +39,38 @@ const ReportsNew = () => {
       setTextReport(result)
     }
 
+    const fetchDailyChart = async () => {
+      const [result, error] = await handlers.fetchDailyChart()
+
+      if(error){
+        return alert('Ada masalah silahkan hubungi team kami!')
+      }
+
+      setDailyChart(result)
+    }
+    
+    const fetchProductionReport = async () => {
+      const [result, error] = await handlers.fetchProductionReport()
+
+      if(error){
+        return alert('Ada masalah silahkan hubungi team kami!')
+      }
+
+      setProductionReport(result)
+    }
+
     fetchPieChart()
     fetchLineChart()
     fetchTextReport()
+    fetchDailyChart()
+    fetchProductionReport()
   }, [])
 
   const [lineChart, setLineChart] = useState({})
   const [pieChart, setPieChart] = useState({})
   const [textReport, setTextReport] = useState({})
+  const [dailyChart, setDailyChart] = useState({})
+  const [productionReport, setProductionReport] = useState({})
   const history = useHistory()
 
   const parseTableData = () => {
@@ -57,7 +81,7 @@ const ReportsNew = () => {
       return data.split('_')[0]
     })
 
-    const result = category.map((data, key) => {
+    let result = category.map((data, key) => {
       return (<tr key={key}>
         <td onClick={() => history.push(`/report-second/${data}`)} className='cursor-pointer'>{data}</td>
         <td>{tableData.hi[data+'_qty']}</td>
@@ -66,6 +90,28 @@ const ReportsNew = () => {
         <td>{numeral(tableData.sdhi[data+'_amount']).format('0,0.[0000]')}</td>
         <td>{tableData.sdbi[data+'_qty']}</td>
         <td>{numeral(tableData.sdbi[data+'_amount']).format('0,0.[0000]')}</td>
+      </tr>)
+    })
+
+    return result
+  }
+
+  const parseProductionTable = () => {
+    const tableData = productionReport.tableData
+    console.log(tableData)
+
+    const category = Object.keys(tableData.hi).map(data => {
+      return data.split('_')[0]
+    })
+
+    console.log(category)
+
+    let result = category.map((data, key) => {
+      return (<tr key={key}>
+        <td onClick={() => history.push(`/report-second/${data}`)} className='cursor-pointer'>{data}</td>
+        <td>{tableData.hi[data+'_qty']}</td>
+        <td>{tableData.sdhi[data+'_qty']}</td>
+        <td>{tableData.sdbi[data+'_qty']}</td>
       </tr>)
     })
 
@@ -91,7 +137,7 @@ const ReportsNew = () => {
       return data.split('_')[0]
     })
 
-    const result = category.map((data, key) => {
+    let result = category.map((data, key) => {
       let fisik = []
       let rupiah = []
       for (let i = 1; i <= 12; i++) {
@@ -121,6 +167,26 @@ const ReportsNew = () => {
       return tableRow
     })
 
+    let subTotal = {}
+
+    for (let i = 1; i <= 12; i++) {
+      const dataExtract = textReport.summaryData.filter(data => data.periode === `${moment().format('YYYY')}-${('0' + i).slice(-2)}`).map(data => data)
+
+      subTotal = {...subTotal, [`${moment().format('YYYY')}-${('0' + i).slice(-2)}`]: dataExtract.length > 0 ? category.map(data => {
+        return +dataExtract[0][`${data}_amount`]
+      }).reduce((firstValue, secondValue) => firstValue + secondValue, 0) : 0}
+
+    }
+
+    result = [...result, (<tr key="subtotal">
+      <td className='bg-gray-700 p-3'><b className='text-white'>Subtotal</b></td>
+      {Object.values(subTotal).map((data, index) => {
+        return (<>
+          <td key={index} className='bg-gray-700 p-3'><b className='text-white'>{numeral(data).format('0,0.[0000]')}</b></td>
+        </>)
+      })}
+    </tr>)]
+
     return result
   }
 
@@ -131,8 +197,21 @@ const ReportsNew = () => {
         <div className="bg-white col-span-4 flex-col pb-36 lg:pb-24 rounded-md shadow-md p-5" style={{
           height: 431
         }}>
-          <h1 className="text-2xl font-semibold col-span-4">Trend Transaksi</h1>
+          <h1 className="text-2xl font-semibold col-span-4">Trend Transaksi Bulanan</h1>
           <Line data={lineChart} options={{
+            maintainAspectRatio : false,
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }}/>
+        </div>
+        <div className="bg-white col-span-4 flex-col pb-36 lg:pb-24 rounded-md shadow-md p-5" style={{
+          height: 431
+        }}>
+          <h1 className="text-2xl font-semibold col-span-4">Trend Transaksi Harian</h1>
+          <Line data={dailyChart} options={{
             maintainAspectRatio : false,
             scales: {
               y: {
@@ -190,7 +269,7 @@ const ReportsNew = () => {
         <div className="bg-white flex-col col-span-4 rounded-md shadow-md p-5 " style={{
           height: 'auto'
         }}>
-          <h1 className='text-2xl font-semibold'>Detail Transaksi</h1>
+          <h1 className='text-2xl font-semibold'>Detail Laporan Penjualan</h1>
           <div className='w-full overflow-x-scroll'>
             <table className='w-full'>
               <thead className='bg-gray-500'>
@@ -231,6 +310,28 @@ const ReportsNew = () => {
               <tbody>
                 {
                   Object.keys(textReport).length > 0 && parseSummaryDataTable()
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="bg-white flex-col col-span-4 rounded-md shadow-md p-5 " style={{
+          height: 'auto'
+        }}>
+          <h1 className='text-2xl font-semibold'>Detail Laporan Produksi</h1>
+          <div className='w-full overflow-x-scroll'>
+            <table className='w-full'>
+              <thead className='bg-gray-500'>
+                <tr>
+                  <th>Produk</th>
+                  <th>HI</th>
+                  <th>SDHI</th>
+                  <th>SDBI</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  Object.keys(productionReport).length > 0 && parseProductionTable()
                 }
               </tbody>
             </table>

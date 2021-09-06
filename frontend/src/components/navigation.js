@@ -53,7 +53,7 @@ const Navigation = (props) => {
                             <Link to="/production" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoDownloadOutline className="flex mr-2 text-sm opacity-75" /> Produksi (Kg)</Link>
                         </li>
                         <li className="items-center flex-row">
-                            <Link to="/setup" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoCogOutline className="flex mr-2 text-sm opacity-75" /> Setup Harga</Link>
+                            <Link to="/setup" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoCogOutline className="flex mr-2 text-sm opacity-75" /> Setup Produk</Link>
                         </li>
                         <li className="items-center flex-row">
                             <Link to="/report-new" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoBarChartOutline className="flex mr-2 text-sm opacity-75" /> Laporan</Link>

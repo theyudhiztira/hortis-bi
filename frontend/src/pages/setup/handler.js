@@ -9,6 +9,16 @@ const handler = {
     }catch(err){
       return [null, err]
     }
+  },
+
+  fetchCategories: async () => {
+    try{
+      const productData = await api.get('product')
+
+      return [productData.data, null]
+    }catch(err){
+      return [null, err]
+    }
   }
 }
 

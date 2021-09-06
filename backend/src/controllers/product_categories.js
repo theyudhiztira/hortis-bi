@@ -40,39 +40,43 @@ module.exports = {
     }, 
 
     list: async (req, res) => {
-        const {from, to, page, limit} = req.query
-        const {queryLimit, queryOffset} = helper.limitOffset(page, limit)
-        
-        let where = "";
-        if(from || to){
-            if(from && to){
-                where += `where a.created_at between '${from}' and '${to}'`
-            }else if(from && !to){
-                where += `where a.created_at >= '${from}'`
-            }else{
-                where += `where a.created_at <= '${to}'`
-            }
-        }
+      let where = ''
 
+      if(req.query.terms){
+        where+=`where name like "%${req.query.terms}%"`
+      }
 
-        try{
-            const data = await model.sequelize.query(`select a.*, b.full_name as creator_name, b.email as creator_email from product_categories a left join users b on a.created_by = b.id ${where.length > 0 ? where : ''} limit ${queryOffset}, ${queryLimit}`, 
-            {
-                nest: true
-            });
+      try{
+          const data = await model.sequelize.query(`select * from product_categories ${where}`, 
+          {
+              nest: true
+          });
 
-            const totalData = await model.sequelize.query(`select COUNT(a.id) as total_rows from product_categories a ${where.length > 0 ? where : ''}`, 
-            {
-                nest: true
-            });
+          return res.status(data ? 200 : 404).send({data: data})
+      }catch(err){
+          console.error(err)
+          return helper.errorResponse(res)
+      }
+    },
 
-            const result = helper.pageData(totalData[0].total_rows, page, limit)
+    subCatList: async (req, res) => {
+      let where = ''
 
-            return res.status(data ? 200 : 404).send({...result, data: data})
-        }catch(err){
-            console.error(err)
-            return helper.errorResponse(res)
-        }
+      if(req.query.terms){
+        where+=`where name like "%${req.query.terms}%"`
+      }
+
+      try{
+          const data = await model.sequelize.query(`select * from product_sub_categories ${where}`, 
+          {
+              nest: true
+          });
+
+          return res.status(data ? 200 : 404).send({data: data})
+      }catch(err){
+          console.error(err)
+          return helper.errorResponse(res)
+      }
     },
 
     edit: async (req, res) => {

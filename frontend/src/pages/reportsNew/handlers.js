@@ -29,5 +29,25 @@ export const handlers = {
     }catch(err){
       return [null, err]
     }
+  },
+
+  fetchDailyChart: async () => {
+    try{
+      const lineChart = await apiCaller.get('daily-chart')
+
+      return [lineChart.data, null]
+    }catch(err){
+      return [null, err]
+    }
+  },
+  
+  fetchProductionReport: async () => {
+    try{
+      const tableData = await apiCaller.get('production-report')
+
+      return [tableData.data, null]
+    }catch(err){
+      return [null, err]
+    }
   }
 }
