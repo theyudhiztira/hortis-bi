@@ -117,37 +117,36 @@ module.exports = {
     },
 
     list: async (req, res) => {
-        const {from, to, date} = req.query
-        
-        let where = "";
-        if(from || to){
-            if(from && to){
-                where += `where a.date between '${from}' and '${to}'`
-            }else if(from && !to){
-                where += `where a.date >= '${from}'`
-            }else{
-                where += `where a.date <= '${to}'`
-            }
-        }
+      const {from, to, date} = req.query
+      
+      let where = "";
+      if(from || to){
+          if(from && to){
+              where += `where a.date between '${from}' and '${to}'`
+          }else if(from && !to){
+              where += `where a.date >= '${from}'`
+          }else{
+              where += `where a.date <= '${to}'`
+          }
+      }
 
-        if(date){
-          where += `and a.created_at like '${date}%'`
-        }
+      if(date){
+        where += `and a.created_at like '${date}%'`
+      }
 
 
-        try{
-            const data = await sequelize.query(`select a.*, b.full_name from transactions a 
-            left join users b on a.created_by = b.id ${where.length > 0 ? where : ''}`, 
-            {
-                nest: true
-            });
+      try{
+          const data = await sequelize.query(`select a.*, b.full_name from transactions a 
+          left join users b on a.created_by = b.id ${where.length > 0 ? where : ''}`, 
+          {
+              nest: true
+          });
 
-            return res.status(data ? 200 : 404).send({data: data})
-        }catch(err){
-            console.error(err)
-            return helper.errorResponse(res)
-        }
-        
+          return res.status(data ? 200 : 404).send({data: data})
+      }catch(err){
+          console.error(err)
+          return helper.errorResponse(res)
+      }
     }
 }
 

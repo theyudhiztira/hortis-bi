@@ -64,7 +64,20 @@ const ReportsNew = () => {
     fetchTextReport()
     fetchDailyChart()
     fetchProductionReport()
+
+    const refreshData = () => {
+      fetchPieChart()
+      fetchLineChart()
+      fetchTextReport()
+      fetchDailyChart()
+      fetchProductionReport()
+    }
+
+    setInterval(() => {
+      refreshData()
+    }, 60000)
   }, [])
+
 
   const [lineChart, setLineChart] = useState({})
   const [pieChart, setPieChart] = useState({})
@@ -106,7 +119,7 @@ const ReportsNew = () => {
 
     console.log(category)
 
-    let result = category.map((data, key) => {
+    let result = category.filter(data => data === "Buah Internal" | data === "Buah Eksternal").map((data, key) => {
       return (<tr key={key}>
         <td onClick={() => history.push(`/report-second/${data}`)} className='cursor-pointer'>{data}</td>
         <td>{tableData.hi[data+'_qty']}</td>
@@ -143,16 +156,16 @@ const ReportsNew = () => {
       for (let i = 1; i <= 12; i++) {
         const isiData = textReport.summaryData.filter(data => data.periode === `${moment().format('YYYY')}-${('0' + i).slice(-2)}`).map(data => data)
 
-        fisik = [...fisik, (<td style={{
+        fisik = [...fisik, (<td title={data} style={{
           minWidth: 153
         }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_qty`]).format('0,0.[0000]') : 0}</td>)]
-        rupiah = [...rupiah, (<td style={{
+        rupiah = [...rupiah, (<td title={data} style={{
           minWidth: 153
         }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_amount`]).format('0,0.[0000]') : 0}</td>)]
       }
       let tableRow = (<React.Fragment>
       <tr className='bg-gray-300'>
-        <td colSpan={13} className='text-left'>{data}</td>
+        <td colSpan={13} className='text-center'>{data}</td>
       </tr>
       <tr>
         <td className='text-left'>Rupiah</td>
@@ -204,6 +217,12 @@ const ReportsNew = () => {
               y: {
                 beginAtZero: true
               }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'bottom'
+              },
             }
           }}/>
         </div>
@@ -217,6 +236,12 @@ const ReportsNew = () => {
               y: {
                 beginAtZero: true
               }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'bottom'
+              },
             }
           }}/>
         </div>
@@ -301,7 +326,7 @@ const ReportsNew = () => {
                 <tr>
                   <th style={{
                     minWidth: 177
-                  }}>Produk</th>
+                  }} key={"UNIQUEDATA0001"}>Produk</th>
                   {
                     parseSummaryHeaderTable()
                   }

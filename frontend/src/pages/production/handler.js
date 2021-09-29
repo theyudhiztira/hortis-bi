@@ -64,9 +64,9 @@ export const handlers = {
     }
   },
 
-  removeTransaction: async (id) => {
+  removeProduction: async (id) => {
     try{
-      const getDetails = await apiCaller.delete(`transaction/${id}`)
+      const getDetails = await apiCaller.delete(`productions/${id}`)
 
       return [getDetails.data, null]
     }catch(err){

@@ -106,7 +106,7 @@ const ReportsThirdLayer = (props) => {
 
     console.log(category)
 
-    let result = category.map((data, key) => {
+    let result = category.filter(data => data === "Buah Internal" | data === "Buah Eksternal").map((data, key) => {
       return (<tr key={key}>
         <td>{data}</td>
         <td>{tableData.hi[data+'_qty']}</td>
@@ -207,6 +207,12 @@ const ReportsThirdLayer = (props) => {
               y: {
                 beginAtZero: true
               }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'bottom'
+              },
             }
           }}/>
         </div>
@@ -220,6 +226,12 @@ const ReportsThirdLayer = (props) => {
               y: {
                 beginAtZero: true
               }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'bottom'
+              },
             }
           }}/>
         </div>

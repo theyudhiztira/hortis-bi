@@ -2,9 +2,10 @@ import React from 'react'
 import Navigation from '../../components/navigation'
 import {
     IoCubeOutline,
-    IoPeopleOutline,
+    IoArchiveOutline,
     IoCartOutline
 } from 'react-icons/io5'
+import apiCaller from '../../services/apiCaller'
 
 const createAvatarUrl = (name) => {
     const splittedName = name.split(" ", 2)
@@ -18,6 +19,21 @@ const createAvatarUrl = (name) => {
 }
 
 const Home = () => {
+  const [stateData, setData] = React.useState({"product":0,"transaction":0,"production":0})
+  React.useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const data = await apiCaller.get('home')
+
+        return setData(data.data)
+      } catch (error) {
+        return alert('Something is wrong please contact our team!')
+      }
+    }
+
+    fetchHomeData()
+  }, [])
+
     const userData = JSON.parse(localStorage.getItem('hortis_user'))
 
     return (<>
@@ -38,7 +54,7 @@ const Home = () => {
                         <div className="grid justify-items-stretch">
                             <div className="justify-self-center md:justify-self-end bg-gradient-to-tl from-purple-400 to-purple-600 grid grid-cols-3 lg:w-64 md:w-50 p-5 rounded-md h-24 shadow-lg mb-4">
                                 <div className="col-span-2">
-                                    <h1 className="place-self-center text-3xl text-white">100</h1>
+                                    <h1 className="place-self-center text-3xl text-white">{stateData.product}</h1>
                                     <b className="font-normal text-white">Products</b>
                                 </div>
                                 <div className="place-self-end">
@@ -49,7 +65,7 @@ const Home = () => {
                         <div className="grid justify-items-stretch">
                             <div className="justify-self-center bg-gradient-to-tl from-green-400 to-green-600 grid grid-cols-3 lg:w-64 md:w-50 p-5 rounded-md h-24 shadow-lg mb-4">
                                 <div className="col-span-2">
-                                    <h1 className="place-self-center text-3xl text-white">100</h1>
+                                    <h1 className="place-self-center text-3xl text-white">{stateData.transaction}</h1>
                                     <b className="font-normal text-white">Transactions</b>
                                 </div>
                                 <div className="place-self-end">
@@ -60,11 +76,11 @@ const Home = () => {
                         <div className="grid justify-items-stretch">
                             <div className="justify-self-center md:justify-self-start bg-gradient-to-tl from-blue-400 to-blue-600 grid grid-cols-3 lg:w-64 md:w-50 p-5 rounded-md h-24 shadow-lg mb-4">
                                 <div className="col-span-2">
-                                    <h1 className="place-self-center text-3xl text-white">100</h1>
-                                    <b className="font-normal text-white">Customers</b>
+                                    <h1 className="place-self-center text-3xl text-white">{stateData.production}</h1>
+                                    <b className="font-normal text-white">Production</b>
                                 </div>
                                 <div className="place-self-end">
-                                    <IoPeopleOutline className="text-white text-6xl" />
+                                    <IoArchiveOutline className="text-white text-6xl" />
                                 </div>
                             </div>
                         </div>

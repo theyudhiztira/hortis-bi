@@ -5,6 +5,34 @@ const moment = require('moment')
 const { db, sequelize } = require('../models')
 
 module.exports = {
+  delete: async (req, res) => {
+    const trxId = req.params.id
+
+    try{
+      await model.productions.destroy({
+        where: {
+          id: trxId
+        }
+      })
+
+      await model.production_details.destroy({
+        where: {
+          production_id: trxId
+        }
+      })
+    }catch(err){
+      return res.status(500).send({
+        status: false,
+        message: 'Error when running the query!'
+      })
+    }
+
+    return res.status(200).send({
+      status: true,
+      message: `Production ID : ${trxId} removed ok`
+    })
+  },
+  
   create: async (req, res) => {
     const productionHt = {
       supplier: req.body.supplier,

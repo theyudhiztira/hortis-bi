@@ -108,7 +108,7 @@ const ReportsSecondLayer = (props) => {
 
     console.log(category)
 
-    let result = category.map((data, key) => {
+    let result = category.filter(data => data === "Buah Internal" | data === "Buah Eksternal").map((data, key) => {
       return (<tr key={key}>
         <td onClick={() => history.push(`/report-third/${data}`)} className='cursor-pointer'>{data}</td>
         <td>{tableData.hi[data+'_qty']}</td>
@@ -209,6 +209,12 @@ const ReportsSecondLayer = (props) => {
               y: {
                 beginAtZero: true
               }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'bottom'
+              },
             }
           }}/>
         </div>
@@ -222,6 +228,12 @@ const ReportsSecondLayer = (props) => {
               y: {
                 beginAtZero: true
               }
+            },
+            plugins: {
+              legend: {
+                display: true,
+                position: 'bottom'
+              },
             }
           }}/>
         </div>

@@ -4,6 +4,7 @@ import moment from 'moment'
 import numeral from 'numeral'
 import './style.css'
 import Swal from 'sweetalert2'
+import {handlers} from '../handler.js'
 
 const ProductionDetailsModal = () => {
   const context = React.useContext(ProductionModalContext)
@@ -25,18 +26,18 @@ const ProductionDetailsModal = () => {
         cancelButtonText: 'Cek kembali'
     }).then(async res => {
       if(res.isConfirmed){
-        // const [result, error] = await handlers.sendDataToServer(date, context.cart)
-        // if(!result){
-        //   return Swal.fire({
-        //       icon: 'error',
-        //       title: 'Oops',
-        //       text: error.response.data.message
-        //   })
-        // }
-
-        Swal.fire('Selesai', 'Data berhasil di hapus', 'success').then(() => {
-          return window.location.reload()
-        })
+        const [result, error] = await handlers.removeProduction(transaction.id)
+        if(!result){
+          return Swal.fire({
+              icon: 'error',
+              title: 'Oops',
+              text: error.response.data.message
+          })
+        }else{
+          return Swal.fire('Selesai', 'Data berhasil di hapus', 'success').then(() => {
+            return window.location.reload()
+          })
+        }
       }
     })
   }
