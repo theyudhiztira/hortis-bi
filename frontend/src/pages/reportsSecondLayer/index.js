@@ -87,11 +87,11 @@ const ReportsSecondLayer = (props) => {
       return (<tr key={key}>
         <td onClick={() => history.push(`/report-third/${data}`)} className='cursor-pointer'>{data}</td>
         <td>{tableData.hi[data+'_qty']}</td>
-        <td>{numeral(tableData.hi[data+'_amount']).format('0,0.[0000]')}</td>
+        <td>{numeral(tableData.hi[data+'_amount']).format('0,0.[00]')}</td>
         <td>{tableData.sdhi[data+'_qty']}</td>
-        <td>{numeral(tableData.sdhi[data+'_amount']).format('0,0.[0000]')}</td>
-        <td>{tableData.sdbi[data+'_qty']}</td>
-        <td>{numeral(tableData.sdbi[data+'_amount']).format('0,0.[0000]')}</td>
+        <td>{numeral(tableData.sdhi[data+'_amount']).format('0,0.[00]')}</td>
+        <td>{numeral(tableData.sdbi[data+'_qty']).format('0,0.[00]')}</td>
+        <td>{numeral(tableData.sdbi[data+'_amount']).format('0,0.[00]')}</td>
       </tr>)
     })
 
@@ -113,7 +113,7 @@ const ReportsSecondLayer = (props) => {
         <td onClick={() => history.push(`/report-third/${data}`)} className='cursor-pointer'>{data}</td>
         <td>{tableData.hi[data+'_qty']}</td>
         <td>{tableData.sdhi[data+'_qty']}</td>
-        <td>{tableData.sdbi[data+'_qty']}</td>
+        <td>{numeral(tableData.sdbi[data+'_qty']).format('0,0.[00]')}</td>
       </tr>)
     })
 
@@ -147,10 +147,10 @@ const ReportsSecondLayer = (props) => {
 
         fisik = [...fisik, (<td style={{
           minWidth: 153
-        }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_qty`]).format('0,0.[0000]') : 0}</td>)]
+        }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_qty`]).format('0,0.[00]') : 0}</td>)]
         rupiah = [...rupiah, (<td style={{
           minWidth: 153
-        }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_amount`]).format('0,0.[0000]') : 0}</td>)]
+        }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_amount`]).format('0,0.[00]') : 0}</td>)]
       }
       let tableRow = (<React.Fragment>
       <tr className='bg-gray-300'>
@@ -184,7 +184,7 @@ const ReportsSecondLayer = (props) => {
       <td className='bg-gray-700 p-3'><b className='text-white'>Subtotal</b></td>
       {Object.values(subTotal).map((data, index) => {
         return (<>
-          <td key={index} className='bg-gray-700 p-3'><b className='text-white'>{numeral(data).format('0,0.[0000]')}</b></td>
+          <td key={index} className='bg-gray-700 p-3'><b className='text-white'>{numeral(data).format('0,0.[00]')}</b></td>
         </>)
       })}
     </tr>)]
@@ -196,9 +196,56 @@ const ReportsSecondLayer = (props) => {
     <div className="w-full bg-gray-200 h-full pb-3">
       <Navigation isFlex={false} />
       <section className="w-full p-2 overflow-y-auto grid grid-cols-4 md:p-11 md:pl-80 gap-3">
-        <div className='flex-row'>
+        <div className="flex-col col-span-4 py-2">
           <h1 className='text-blue-600 cursor-pointer hover:underline' onClick={() => props.history.goBack()}><IoCaretBack className='inline-block' /> Back</h1>
         </div>
+
+        <div className="bg-white col-span-4 flex-col pb-36 rounded-md shadow-md p-5 lg:pb-24 md:col-span-2" style={{
+          height: 431
+        }}>
+          <h1 className="text-2xl font-bold col-span-4">Porsi Transaksi</h1>
+          <Pie data={pieChart} height={331} options={{
+            onClick: (ev, el) => {
+              const label = pieChart.labels[el[0]['index']]
+              if(Object.keys(pieChart).length > 0){
+                return history.push('/report-third/'+label.split(' - (')[0])
+              }
+            },
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'left'
+              },
+            }
+          }} />
+        </div>
+
+        <div className="col-span-4 grid gap-2 md:col-span-2" style={{
+          height: 431,
+          flexWrap: 'wrap',
+          justifyContent: 'content'
+        }}>
+          <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
+            <h2 className='text-lg font-bold'>Total Hari Ini</h2>
+            <div className='flex-grow flex'>
+              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[00]') : 0}</h1>
+            </div>
+          </div>
+          <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
+            <h2 className='text-lg font-bold'>Total Sampai Dengan Hari Ini</h2>
+            <div className='flex-grow flex'>
+              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdhi).format('0,0.[00]') : 0}</h1>
+            </div>
+          </div>
+          <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
+            <h2 className='text-lg font-bold'>Total Sampai Dengan Bulan Ini</h2>
+            <div className='flex-grow flex'>
+              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
+            </div>
+          </div>
+        </div>
+
         <div className="bg-white col-span-4 flex-col pb-36 lg:pb-24 rounded-md shadow-md p-5" style={{
           height: 431
         }}>
@@ -237,52 +284,6 @@ const ReportsSecondLayer = (props) => {
             }
           }}/>
         </div>
-        <div className="bg-white col-span-4 flex-col pb-36 rounded-md shadow-md p-5 lg:pb-24 md:col-span-2" style={{
-          height: 431
-        }}>
-          <h1 className="text-2xl font-bold col-span-4">Porsi Transaksi</h1>
-          <Pie data={pieChart} height={331} options={{
-            onClick: (ev, el) => {
-              const label = pieChart.labels[el[0]['index']]
-              if(Object.keys(pieChart).length > 0){
-                return history.push('/report-third/'+label.split(' - (')[0])
-              }
-            },
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: true,
-                position: 'left'
-              },
-            }
-          }} />
-        </div>
-
-        <div className="col-span-4 grid gap-2 md:col-span-2" style={{
-          height: 431,
-          flexWrap: 'wrap',
-          justifyContent: 'content'
-        }}>
-          <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-lg font-bold'>Total Hari Ini</h2>
-            <div className='flex-grow flex'>
-              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[0000]') : 0}</h1>
-            </div>
-          </div>
-          <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-lg font-bold'>Total Sampai Dengan Hari Ini</h2>
-            <div className='flex-grow flex'>
-              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdhi).format('0,0.[0000]') : 0}</h1>
-            </div>
-          </div>
-          <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-lg font-bold'>Total Sampai Dengan Bulan Ini</h2>
-            <div className='flex-grow flex'>
-              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[0000]') : 0}</h1>
-            </div>
-          </div>
-        </div>
-
         <div className="bg-white flex-col col-span-4 rounded-md shadow-md p-5 " style={{
           height: 'auto'
         }}>

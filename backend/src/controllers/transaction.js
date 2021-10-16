@@ -137,7 +137,7 @@ module.exports = {
 
       try{
           const data = await sequelize.query(`select a.*, b.full_name from transactions a 
-          left join users b on a.created_by = b.id ${where.length > 0 ? where : ''}`, 
+          left join users b on a.created_by = b.id ${where.length > 0 ? where : ''} ORDER BY id DESC`, 
           {
               nest: true
           });

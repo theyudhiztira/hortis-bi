@@ -103,7 +103,7 @@ export const ItemAddModal = () => {
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Kuantitas</label>
-                <InputNumber className='w-full' min={1} value={qty} onChange={value => changeQty(value)} disabled={!selected.unit} />
+                <InputNumber className='w-full' min={0} value={qty} onChange={value => changeQty(value)} disabled={!selected.unit} />
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Subtotal</label>

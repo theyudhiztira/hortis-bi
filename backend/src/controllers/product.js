@@ -12,6 +12,7 @@ module.exports = {
                 sub_category_id: req.body.sub_category_id,
                 name: req.body.name,
                 unit: req.body.unit,
+                retail_price: req.body.retail_price,
                 reseller1_price: req.body.reseller1_price,
                 reseller2_price: req.body.reseller2_price,
                 reseller3_price: req.body.reseller3_price,

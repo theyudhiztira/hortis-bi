@@ -103,7 +103,7 @@ const ProductModal = () => {
 
   const categoryOptions = catList.map(d => <Select.Option key={d.id}>{d.name}</Select.Option>)
   const subCategoryOptions = subCatList.map(d => <Select.Option key={d.id}>{d.name}</Select.Option>)
-  const unitOptions = (['Pcs','Kg','Ltr','Unit','Pkk','Zak','Set','Org','Lot','Btl']).map(value => <Select.Option key={value}>{value}</Select.Option>)
+  const unitOptions = (['Pcs','Kg','Porsi','Ltr','Unit','Pkk','Zak','Set','Org','Lot','Btl']).map(value => <Select.Option key={value}>{value}</Select.Option>)
 
   return (<React.Fragment>
     <Modal

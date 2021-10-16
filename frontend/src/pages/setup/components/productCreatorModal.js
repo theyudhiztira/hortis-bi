@@ -47,17 +47,25 @@ const ProductCreatorModal = () => {
       }
 
       if(res.isConfirmed){
+        console.log({
+          retail_price: retail
+        })
+
+        const dataToSend = {
+          name: name,
+          unit: unit.text,
+          sub_category_id: subCategory.value,
+          category_id: category.value,
+          retail_price: retail,
+          reseller1_price: reseller1,
+          reseller2_price: reseller2,
+          reseller3_price: reseller3
+        }
+
+        console.log(dataToSend)
+        
         try{
-          await api.post(`product`, {
-            name: name,
-            unit: unit.text,
-            sub_category_id: subCategory.value,
-            category_id: category.value,
-            retail_price: retail,
-            reseller1_price: reseller1,
-            reseller2_price: reseller2,
-            reseller3_price: reseller3
-          })
+          await api.post(`product`, dataToSend)
 
           return Swal.fire('Berhasil', 'Data produk telah disimpan', 'success')
           .then(() => {
@@ -104,7 +112,7 @@ const ProductCreatorModal = () => {
 
   const categoryOptions = catList.map(d => <Select.Option key={d.id}>{d.name}</Select.Option>)
   const subCategoryOptions = subCatList.map(d => <Select.Option key={d.id}>{d.name}</Select.Option>)
-  const unitOptions = (['Pcs','Kg','Ltr','Unit','Pkk','Zak','Set','Org','Lot','Btl']).map(value => <Select.Option key={value}>{value}</Select.Option>)
+  const unitOptions = (['Pcs','Kg','Ltr','Unit','Pkk','Zak','Set','Org','Lot','Btl','Porsi']).map(value => <Select.Option key={value}>{value}</Select.Option>)
 
   return (<React.Fragment>
     <Modal

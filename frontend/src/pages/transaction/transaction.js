@@ -130,7 +130,7 @@ class Transaction extends Component {
                 if(v.status === "1"){
                     return this.setState({
                         productList: [
-                            ...this.state.productList, {value: v.id, label: `[${v.category_details.name}] ${v.name} - Rp. ${numeral(v.price_per_unit_retail).format('0,0.[0000]')} / ${v.unit}`}
+                            ...this.state.productList, {value: v.id, label: `[${v.category_details.name}] ${v.name} - Rp. ${numeral(v.price_per_unit_retail).format('0,0.[00]')} / ${v.unit}`}
                         ]
                     })
                 }
@@ -150,10 +150,10 @@ class Transaction extends Component {
                     <td className="text-center py-2 text-sm">{value.product.id}</td>
                     <td className="text-center py-2 text-sm">{value.product.name}</td>
                     <td className="text-center py-2 text-sm">{value.product.category_details.name}</td>
-                    <td className="text-center py-2 text-sm">{numeral(value.product.price_per_unit_retail).format('0,0.[0000]')}</td>
+                    <td className="text-center py-2 text-sm">{numeral(value.product.price_per_unit_retail).format('0,0.[00]')}</td>
                     <td className="text-center py-2 text-sm">{value.product.unit}</td>
                     <td className="text-center py-2 text-sm">{numeral(value.quantity).value()}</td>
-                    <td className="text-center py-2 text-sm">{numeral(value.quantity * value.product.price_per_unit_retail).format('0,0.[0000]')}</td>
+                    <td className="text-center py-2 text-sm">{numeral(value.quantity * value.product.price_per_unit_retail).format('0,0.[00]')}</td>
                     <td className="text-center py-2 text-sm gap-2">
                         <button className="mx-auto p-2 bg-red-400 hover:bg-red-600 hover:text-white rounded" onClick={() => this.removeItem(value.product, index)}><IoTrashOutline /></button>
                     </td>
@@ -171,7 +171,7 @@ class Transaction extends Component {
 
         return this.setState({
             productList: [
-                ...this.state.productList, {value: val.id, label: `[${val.category_details.name}] ${val.name} - Rp. ${numeral(val.price_per_unit_retail).format('0,0.[0000]')} / ${val.unit}`}
+                ...this.state.productList, {value: val.id, label: `[${val.category_details.name}] ${val.name} - Rp. ${numeral(val.price_per_unit_retail).format('0,0.[00]')} / ${val.unit}`}
             ]
         })
     }
@@ -199,7 +199,7 @@ class Transaction extends Component {
 
             grandTotal+=v.product.price_per_unit_retail*v.quantity
 
-            return itemTable+=`<tr class="bg-white hover:bg-gray-100"><td class="text-center py-2 text-sm px-2">${v.product.name}</td><td class="text-center py-2 text-sm px-2">${numeral(v.product.price_per_unit_retail).format('0,0.[0000]')}</td><td class="text-center py-2 text-sm px-2">${v.quantity}</td><td class="text-center py-2 text-sm px-2 text-right">${numeral(v.product.price_per_unit_retail * v.quantity).format('0,0.[0000]')}</td></tr>\n`
+            return itemTable+=`<tr class="bg-white hover:bg-gray-100"><td class="text-center py-2 text-sm px-2">${v.product.name}</td><td class="text-center py-2 text-sm px-2">${numeral(v.product.price_per_unit_retail).format('0,0.[00]')}</td><td class="text-center py-2 text-sm px-2">${v.quantity}</td><td class="text-center py-2 text-sm px-2 text-right">${numeral(v.product.price_per_unit_retail * v.quantity).format('0,0.[00]')}</td></tr>\n`
         })
 
         dataToUpload = {...dataToUpload, cart: cartItems}
@@ -245,7 +245,7 @@ class Transaction extends Component {
                 ${itemTable}
                 <tr class="bg-gray-500">
                     <td colspan=3 class="text-white text-sm text-right p-2">Grand Total</td>
-                    <td colspan=3 class="text-white text-sm text-right p-2">${numeral(grandTotal).format('0,0.[0000]')}</td>
+                    <td colspan=3 class="text-white text-sm text-right p-2">${numeral(grandTotal).format('0,0.[00]')}</td>
                 </tr>
                 </tbody>
             </table>`,
@@ -360,7 +360,7 @@ class Transaction extends Component {
                 total += this.state.cartItems[i].product.price_per_unit_retail * this.state.cartItems[i].quantity
             }
 
-            return numeral(total).format('0,0.[0000]')
+            return numeral(total).format('0,0.[00]')
         }
 
         return (
@@ -474,7 +474,7 @@ class Transaction extends Component {
                                                     {
                                                         <div className="flex flex-col">
                                                             <label className="text-xs">Price</label>
-                                                            Rp. {this.state.selectedProduct.product.price_per_unit_retail ? numeral(this.state.selectedProduct.product.price_per_unit_retail).format('0,0.[0000]') : 0} /&nbsp;
+                                                            Rp. {this.state.selectedProduct.product.price_per_unit_retail ? numeral(this.state.selectedProduct.product.price_per_unit_retail).format('0,0.[00]') : 0} /&nbsp;
                                                             {this.state.selectedProduct.product.unit ? this.state.selectedProduct.product.unit : "Unit"}
                                                         </div>
                                                     }

@@ -99,7 +99,7 @@ const TransactionTable = () => {
                 {
                   name: "Total (Rp.)",
                   selector: (row) => row['amount_due'],
-                  format: (row) => "Rp. "+numeral(row.amount_due).format('0,0.[0000]'),
+                  format: (row) => "Rp. "+numeral(row.amount_due).format('0,0.[00]'),
                   sortable: true,
                   center: true
                 },

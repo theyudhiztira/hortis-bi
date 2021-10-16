@@ -34,7 +34,7 @@
     },
     "scripts": {
         "start": "craco start",
-        "build": "craco build",
+        "build": "craco build && firebase deploy",
         "test": "craco test",
         "eject": "react-scripts eject",
         "dev": "yarn start && cd ../backend && yarn start"

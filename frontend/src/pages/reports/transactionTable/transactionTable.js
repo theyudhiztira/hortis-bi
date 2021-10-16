@@ -18,7 +18,7 @@ const ItemTable = (props) => {
                   <tr className='hover:bg-gray-100' key={`${row}-${index}`}>
                     <td className='p-2'>{`${Object.keys(item)}`}</td>
                     <td className='p-2 text-right'>{item[Object.keys(item)].quantity}</td>
-                    <td className='p-2 text-right'>{numeral(item[Object.keys(item)].income).format('0,0.[0000]')}</td>
+                    <td className='p-2 text-right'>{numeral(item[Object.keys(item)].income).format('0,0.[00]')}</td>
                   </tr>
                 )
               })
@@ -47,7 +47,7 @@ const CategoryTable = (props) => {
                   <tr className='hover:bg-gray-100' key={`${row}-${index}`}>
                     <td className='p-2'>{`${Object.keys(item)} [${item[Object.keys(item)].unit}]`}</td>
                     <td className='p-2 text-right'>{item[Object.keys(item)].quantity}</td>
-                    <td className='p-2 text-right'>{numeral(item[Object.keys(item)].income).format('0,0.[0000]')}</td>
+                    <td className='p-2 text-right'>{numeral(item[Object.keys(item)].income).format('0,0.[00]')}</td>
                   </tr>
                 )
               })

@@ -18,7 +18,7 @@ pdfMake.fonts = {
   }
 };
 
-const parseLineChart = (data) => {
+const parseLineChart = async (data, mode) => {
   let newObject = data.map(data => {
     let parsedInt = {}
     Object.keys(data).map(dataKey => {
@@ -38,13 +38,23 @@ const parseLineChart = (data) => {
     return keyValue
   })
 
+  let fixedColor = {}
+
+  if(mode === 'd'){
+    const fetchColor = await sequelize.query(`select name, color from product_categories where name in ('${categories.join("','")}')`, {nest:true}) 
+
+    fetchColor.map(data => {
+      fixedColor = {...fixedColor, [data.name]: data.color}
+    })
+  }
+
   const result = {
       labels: newObject.map(value => {
         return value.periode
       }),
       datasets: categories.map(categoryValue => {
         const luminosity = ['bright', 'dark']
-        const color = randomColor({
+        const color = mode === "d" ? fixedColor[categoryValue] : randomColor({
           luminosity: luminosity[Math.floor(Math.random() * luminosity.length)],
           format: 'rgba',
           alpha: 0.5
@@ -62,7 +72,7 @@ const parseLineChart = (data) => {
   return result
 }
 
-const parsePieChart = (data) => {
+const parsePieChart = async (data, mode) => {
   let newObject = data.map(data => {
     let parsedInt = {}
     Object.keys(data).map(dataKey => {
@@ -81,10 +91,20 @@ const parsePieChart = (data) => {
   const categories = Object.keys(newObject[1]).filter(keyValue => keyValue !== 'periode').map(keyValue => {
     return keyValue
   })
+  
+  let fixedColor = {}
+
+  if(mode === 'd'){
+    const fetchColor = await sequelize.query(`select name, color from product_categories where name in ('${categories.join("','")}')`, {nest:true}) 
+
+    fetchColor.map(data => {
+      fixedColor = {...fixedColor, [data.name]: data.color}
+    })
+  }
 
   const luminosity = ['bright', 'dark']
-  let color = categories.map(() => {
-    return randomColor({
+  let color = categories.map(data => {
+    return mode === "d" ? fixedColor[data] : randomColor({
       luminosity: luminosity[Math.floor(Math.random() * luminosity.length)],
       format: 'rgba',
       alpha: 0.5
@@ -200,7 +220,7 @@ module.exports = {
               
               return tableContent = [
                 ...tableContent, 
-                [{text: Object.keys(product)[0], alignment: 'left'}, {text: numeral(detail.quantity).format('0,0.[0000]'), alignment: 'right'}, {text: numeral(detail.income).format('0,0.[0000]'), alignment: 'right'}],
+                [{text: Object.keys(product)[0], alignment: 'left'}, {text: numeral(detail.quantity).format('0,0.[00]'), alignment: 'right'}, {text: numeral(detail.income).format('0,0.[00]'), alignment: 'right'}],
               ]
             })
           }else{
@@ -215,13 +235,13 @@ module.exports = {
 
           return tableContent = [
             ...tableContent, 
-            [{text: 'Subtotal', style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}, {text: numeral(quantitySubTotal).format('0,0.[0000]'), style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}, {text: numeral(incomeSubTotal).format('0,0.[0000]'), style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}],
+            [{text: 'Subtotal', style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}, {text: numeral(quantitySubTotal).format('0,0.[00]'), style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}, {text: numeral(incomeSubTotal).format('0,0.[00]'), style: 'tableHeader', alignment: 'right', fillColor: '#55fbf3'}],
           ]
         })
     })
 
     tableContent = [...tableContent, 
-      [{text: `Grand Total of ${year}`, style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}, {text: numeral(quantityTotal).format('0,0.[0000]'), style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}, {text: numeral(incomeTotal).format('0,0.[0000]'), style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}],
+      [{text: `Grand Total of ${year}`, style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}, {text: numeral(quantityTotal).format('0,0.[00]'), style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}, {text: numeral(incomeTotal).format('0,0.[00]'), style: 'tableHeader', alignment: 'right', fillColor: '#f09012'}],
     ]
 
     const pdfContent = {
@@ -397,7 +417,7 @@ module.exports = {
       }
     })
 
-    const finalData = parseLineChart(Object.values(data))
+    const finalData = await parseLineChart(Object.values(data), mode)
 
     return res.status(200).send(finalData)
   },
@@ -467,7 +487,7 @@ module.exports = {
       }
     })
 
-    const finalData = parseLineChart(Object.values(data))
+    const finalData = await parseLineChart(Object.values(data), mode)
 
     return res.status(200).send(finalData)
   },
@@ -533,7 +553,7 @@ module.exports = {
       }
     })
 
-    const finalData = parsePieChart(Object.values(data))
+    const finalData = await parsePieChart(Object.values(data), mode)
 
     return res.status(200).send(finalData)
   },

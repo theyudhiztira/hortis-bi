@@ -63,7 +63,7 @@ const TransactionDetailsModal = () => {
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Total</label>
-                <div>Rp. {numeral(transaction.amount_due).format('0,0.[0000]')}</div>
+                <div>Rp. {numeral(transaction.amount_due).format('0,0.[00]')}</div>
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Operator</label>
@@ -86,8 +86,8 @@ const TransactionDetailsModal = () => {
                         transaction.items.map(item => {
                           return (<tr>
                             <td>{item.product_details.name}</td>
-                            <td>Rp. {numeral(item.price).format('0,0.[0000]')}</td>
-                            <td>{numeral(item.pricing_type).format('0,0.[0000]')}</td>
+                            <td>Rp. {numeral(item.price).format('0,0.[00]')}</td>
+                            <td>{numeral(item.pricing_type).format('0,0.[00]')}</td>
                             <td>{item.quantity}</td>
                           </tr>)
                         })
