@@ -6,6 +6,8 @@ import {
     IoCartOutline
 } from 'react-icons/io5'
 import apiCaller from '../../services/apiCaller'
+import numeral from 'numeral'
+import { Link } from 'react-router-dom'
 
 const createAvatarUrl = (name) => {
     const splittedName = name.split(" ", 2)
@@ -20,11 +22,14 @@ const createAvatarUrl = (name) => {
 
 const Home = () => {
   const [stateData, setData] = React.useState({"product":0,"transaction":0,"production":0})
+  const [textReport, setTextReport] = React.useState({})
   React.useEffect(() => {
     const fetchHomeData = async () => {
       try {
         const data = await apiCaller.get('home')
+        const report = await apiCaller.get('first-text-report')
 
+        setTextReport(report.data)
         return setData(data.data)
       } catch (error) {
         return alert('Something is wrong please contact our team!')
@@ -50,88 +55,34 @@ const Home = () => {
                             <div className="text-xs md:text-sm pt-2 text-gray-500">Manage your info and data to make Hortis Dashboard work better for you</div>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 md:mt-10 mt-2">
-                        <div className="grid justify-items-stretch">
-                            <div className="justify-self-center md:justify-self-end bg-gradient-to-tl from-purple-400 to-purple-600 grid grid-cols-3 lg:w-64 md:w-50 p-5 rounded-md h-24 shadow-lg mb-4">
-                                <div className="col-span-2">
-                                    <h1 className="place-self-center text-3xl text-white">{stateData.product}</h1>
-                                    <b className="font-normal text-white">Products</b>
-                                </div>
-                                <div className="place-self-end">
-                                    <IoCubeOutline className="text-white text-6xl" />
-                                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-1 md:mt-10 mt-2">
+                        <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch my-2'>
+                            <h2 className='text-xl font-bold'>Total Hari Ini</h2>
+                            <div className='flex-grow flex'>
+                            <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[00]') : 0}</h1>
                             </div>
                         </div>
-                        <div className="grid justify-items-stretch">
-                            <div className="justify-self-center bg-gradient-to-tl from-green-400 to-green-600 grid grid-cols-3 lg:w-64 md:w-50 p-5 rounded-md h-24 shadow-lg mb-4">
-                                <div className="col-span-2">
-                                    <h1 className="place-self-center text-3xl text-white">{stateData.transaction}</h1>
-                                    <b className="font-normal text-white">Transactions</b>
-                                </div>
-                                <div className="place-self-end">
-                                    <IoCartOutline className="text-white text-6xl" />
-                                </div>
+                        <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch my-2'>
+                            <h2 className='text-xl font-bold'>Total Kemarin</h2>
+                            <div className='flex-grow flex'>
+                            <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.yesterday).format('0,0.[00]') : 0}</h1>
                             </div>
                         </div>
-                        <div className="grid justify-items-stretch">
-                            <div className="justify-self-center md:justify-self-start bg-gradient-to-tl from-blue-400 to-blue-600 grid grid-cols-3 lg:w-64 md:w-50 p-5 rounded-md h-24 shadow-lg mb-4">
-                                <div className="col-span-2">
-                                    <h1 className="place-self-center text-3xl text-white">{stateData.production}</h1>
-                                    <b className="font-normal text-white">Production</b>
-                                </div>
-                                <div className="place-self-end">
-                                    <IoArchiveOutline className="text-white text-6xl" />
-                                </div>
+                        <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch my-2'>
+                            <h2 className='text-xl font-bold'>Total Sampai Dengan Bulan Ini</h2>
+                            <div className='flex-grow flex'>
+                            <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
                             </div>
                         </div>
-                    </div>
-                    <div className="mt-2 md:mt-10 justify-items-stretch grid">
-                        <div className="bg-white shadow overflow-hidden sm:rounded-lg justify-self-center w-full md:w-6/12">
-                            <div className="px-4 py-5 sm:px-6">
-                                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                                Account Information
-                                </h3>
-                                <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                                Personal details information.
-                                </p>
-                            </div>
-                            <div className="border-t border-gray-200">
-                                <dl>
-                                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                        Full name
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                        {userData.full_name}
-                                        </dd>
-                                    </div>
-                                    <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                        Role
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                        {String(userData.role).toUpperCase()}
-                                        </dd>
-                                    </div>
-                                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                        Email address
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                        {userData.email}
-                                        </dd>
-                                    </div>
-                                    <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                        <dt className="text-sm font-medium text-gray-500">
-                                        Phone Number
-                                        </dt>
-                                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                        {userData.phone}
-                                        </dd>
-                                    </div>
-                                </dl>
+                        <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch my-2'>
+                            <h2 className='text-xl font-bold'>Total Sampai Dengan Bulan Ini</h2>
+                            <div className='flex-grow flex'>
+                            <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
                             </div>
                         </div>
+                        <Link className='btn bg-blue-500 mt-2 p-3 font-bold text-white hover:bg-blue-600 rounded text-center' to='/report-new'>
+                            Lihat Semua Laporan
+                        </Link>
                     </div>
                 </div>
             </section>

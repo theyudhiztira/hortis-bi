@@ -7,6 +7,7 @@ import numeral from 'numeral'
 import { useHistory } from 'react-router-dom'
 import { IoCaretBack } from 'react-icons/io5'
 import * as moment from 'moment'
+import DailyReportTable from '../reportsThirdLayer/components/dailyReportTable'
 
 const ReportsSecondLayer = (props) => {
   useEffect(() => {
@@ -74,6 +75,7 @@ const ReportsSecondLayer = (props) => {
   const [dailyChart, setDailyChart] = useState({})
   const [productionReport, setProductionReport] = useState({})
   const history = useHistory()
+  const userData = JSON.parse(localStorage.getItem('hortis_user'))
 
   const parseTableData = () => {
     const tableData = textReport.tableData
@@ -100,13 +102,10 @@ const ReportsSecondLayer = (props) => {
 
   const parseProductionTable = () => {
     const tableData = productionReport.tableData
-    console.log(tableData)
 
     const category = Object.keys(tableData.hi).map(data => {
       return data.split('_')[0]
     })
-
-    console.log(category)
 
     let result = category.filter(data => data === "Buah Internal" | data === "Buah Eksternal").map((data, key) => {
       return (<tr key={key}>
@@ -116,6 +115,8 @@ const ReportsSecondLayer = (props) => {
         <td>{numeral(tableData.sdbi[data+'_qty']).format('0,0.[00]')}</td>
       </tr>)
     })
+
+    console.log(result)
 
     return result
   }
@@ -146,15 +147,15 @@ const ReportsSecondLayer = (props) => {
         const isiData = textReport.summaryData.filter(data => data.periode === `${moment().format('YYYY')}-${('0' + i).slice(-2)}`).map(data => data)
 
         fisik = [...fisik, (<td style={{
-          minWidth: 153
+          minWidth: "8%"
         }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_qty`]).format('0,0.[00]') : 0}</td>)]
         rupiah = [...rupiah, (<td style={{
-          minWidth: 153
+          minWidth: "8%"
         }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_amount`]).format('0,0.[00]') : 0}</td>)]
       }
       let tableRow = (<React.Fragment>
       <tr className='bg-gray-300'>
-        <td colSpan={13} className='text-left'>{data}</td>
+        <td colSpan={13} className='text-center'>{data}</td>
       </tr>
       <tr>
         <td className='text-left'>Rupiah</td>
@@ -195,7 +196,9 @@ const ReportsSecondLayer = (props) => {
   return (
     <div className="w-full bg-gray-200 h-full pb-3">
       <Navigation isFlex={false} />
-      <section className="w-full p-2 overflow-y-auto grid grid-cols-4 md:p-11 md:pl-80 gap-3">
+      <section className="w-full p-2 overflow-y-auto grid grid-cols-4 md:p-11 md:pl-80 gap-3" style={{
+        paddingLeft: userData.role == 'user' ? '2rem' : '20rem'
+      }}>
         <div className="flex-col col-span-4 py-2">
           <h1 className='text-blue-600 cursor-pointer hover:underline' onClick={() => props.history.goBack()}><IoCaretBack className='inline-block' /> Back</h1>
         </div>
@@ -204,7 +207,7 @@ const ReportsSecondLayer = (props) => {
           height: 431
         }}>
           <h1 className="text-2xl font-bold col-span-4">Porsi Transaksi</h1>
-          <Pie data={pieChart} height={331} options={{
+          {pieChart.datasets && <Pie data={pieChart} height={331} options={{
             onClick: (ev, el) => {
               const label = pieChart.labels[el[0]['index']]
               if(Object.keys(pieChart).length > 0){
@@ -218,7 +221,7 @@ const ReportsSecondLayer = (props) => {
                 position: 'left'
               },
             }
-          }} />
+          }} />}
         </div>
 
         <div className="col-span-4 grid gap-2 md:col-span-2" style={{
@@ -227,21 +230,27 @@ const ReportsSecondLayer = (props) => {
           justifyContent: 'content'
         }}>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-lg font-bold'>Total Hari Ini</h2>
+            <h2 className='text-md font-bold'>Total Hari Ini</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[00]') : 0}</h1>
+              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[00]') : 0}</h1>
             </div>
           </div>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-lg font-bold'>Total Sampai Dengan Hari Ini</h2>
+            <h2 className='text-md font-bold'>Total Kemarin</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdhi).format('0,0.[00]') : 0}</h1>
+              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.yesterday).format('0,0.[00]') : 0}</h1>
             </div>
           </div>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-lg font-bold'>Total Sampai Dengan Bulan Ini</h2>
+            <h2 className='text-md font-bold'>Total Sampai Dengan Bulan Ini</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
+              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
+            </div>
+          </div>
+          <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
+            <h2 className='text-md font-bold'>Total Sampai Dengan Bulan Ini</h2>
+            <div className='flex-grow flex'>
+              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
             </div>
           </div>
         </div>
@@ -250,7 +259,7 @@ const ReportsSecondLayer = (props) => {
           height: 431
         }}>
           <h1 className="text-2xl font-bold col-span-4">Trend Transaksi Bulanan</h1>
-          <Line data={lineChart} options={{
+          {lineChart.datasets && <Line data={lineChart} options={{
             maintainAspectRatio : false,
             scales: {
               y: {
@@ -263,13 +272,13 @@ const ReportsSecondLayer = (props) => {
                 position: 'bottom'
               },
             }
-          }}/>
+          }}/>}
         </div>
         <div className="bg-white col-span-4 flex-col pb-36 lg:pb-24 rounded-md shadow-md p-5" style={{
           height: 431
         }}>
           <h1 className="text-2xl font-semibold col-span-4">Trend Transaksi Harian</h1>
-          <Line data={dailyChart} options={{
+          {dailyChart.datasets && <Line data={dailyChart} options={{
             maintainAspectRatio : false,
             scales: {
               y: {
@@ -282,7 +291,7 @@ const ReportsSecondLayer = (props) => {
                 position: 'bottom'
               },
             }
-          }}/>
+          }}/>}
         </div>
         <div className="bg-white flex-col col-span-4 rounded-md shadow-md p-5 " style={{
           height: 'auto'
@@ -318,8 +327,8 @@ const ReportsSecondLayer = (props) => {
               <thead className='bg-gray-500'>
                 <tr>
                   <th style={{
-                    minWidth: 177
-                  }}>Produk</th>
+                    minWidth: "8%"
+                  }}></th>
                   {
                     parseSummaryHeaderTable()
                   }
@@ -331,6 +340,9 @@ const ReportsSecondLayer = (props) => {
                 }
               </tbody>
             </table>
+          </div>
+          <div className='w-full overflow-x-scroll my-5'>
+            {dailyChart.datasets && <DailyReportTable header={dailyChart.labels} datatable={dailyChart.datasets} />}
           </div>
         </div>
 
@@ -350,7 +362,7 @@ const ReportsSecondLayer = (props) => {
               </thead>
               <tbody>
                 {
-                  Object.keys(productionReport).length > 0 && parseProductionTable()
+                  productionReport.tableData && parseProductionTable()
                 }
               </tbody>
             </table>

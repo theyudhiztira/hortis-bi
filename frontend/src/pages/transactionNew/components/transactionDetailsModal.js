@@ -59,7 +59,7 @@ const TransactionDetailsModal = () => {
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Tanggal Pencatatan</label>
-                <div>{moment(transaction.created_at).format('YYYY-MM-DD HH:mm')}</div>
+                <div>{moment(transaction.createdAt).format('YYYY-MM-DD HH:mm')}</div>
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Total</label>
@@ -71,14 +71,17 @@ const TransactionDetailsModal = () => {
               </div>
               <div className="flex flex-col col-span-2">
                 <label className="text-xs">Detail Transaksi</label>
-                <div className='w-full'>
+                <div className='w-full' style={{
+                  maxHeight: 250,
+                  overflowY: 'scroll'
+                }}>
                   <table className='w-full'>
                     <thead>
                       <tr className='bg-gray-500'>
                         <th className='text-center'>Produk</th>
                         <th className='text-center'>Harga</th>
                         <th className='text-center'>Tipe Harga</th>
-                        <th className='text-center'>Jumlah</th>
+                        <th className='text-center'>Quantity</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -87,8 +90,8 @@ const TransactionDetailsModal = () => {
                           return (<tr>
                             <td>{item.product_details.name}</td>
                             <td>Rp. {numeral(item.price).format('0,0.[00]')}</td>
-                            <td>{numeral(item.pricing_type).format('0,0.[00]')}</td>
-                            <td>{item.quantity}</td>
+                            <td>{item.pricing_type}</td>
+                            <td>{numeral(item.price).format('0,0.[00]')}</td>
                           </tr>)
                         })
                       }

@@ -20,22 +20,23 @@ import Setup from './pages/setup'
 const App = () => {
     const isAuthenticated = Auth.isAuthenticated();
 
-
-    return (<Router>
-        <Switch>
-            <PublicRoute exact path='/login' component={Login} isAuthenticated={isAuthenticated} />
-            <PrivateRoute exact path='/home' component={Home} isAuthenticated={isAuthenticated} />
-            {/* <PrivateRoute exact path='/transaction' component={Transaction} isAuthenticated={isAuthenticated} /> */}
-            <PrivateRoute exact path='/transaction-new' component={TransactionNew} isAuthenticated={isAuthenticated} />
-            <PrivateRoute exact path='/report-new' component={ReportNew} isAuthenticated={isAuthenticated} />
-            <PrivateRoute exact path='/setup' component={Setup} isAuthenticated={isAuthenticated} />
-            <PrivateRoute exact path='/report-second/:data' component={ReportsSecondLayer} isAuthenticated={isAuthenticated} />
-            <PrivateRoute exact path='/report-third/:data' component={ReportsThirdLayer} isAuthenticated={isAuthenticated} />
-            
-            <PrivateRoute exact path='/production' component={Production} isAuthenticated={isAuthenticated} />
-            <Redirect to={isAuthenticated ? '/home' : '/login'} />
-        </Switch>
-    </Router>);
+    return (
+        <Router>
+            <Switch>
+                <PublicRoute exact path='/login' component={Login} isAuthenticated={isAuthenticated} />
+                <PrivateRoute exact path='/home' component={Home} isAuthenticated={isAuthenticated} />
+                {/* <PrivateRoute exact path='/transaction' component={Transaction} isAuthenticated={isAuthenticated} /> */}
+                <PrivateRoute exact path='/transaction-new' component={TransactionNew} isAuthenticated={isAuthenticated} />
+                <PrivateRoute exact path='/report-new' component={ReportNew} isAuthenticated={isAuthenticated} />
+                <PrivateRoute exact path='/setup' component={Setup} isAuthenticated={isAuthenticated} />
+                <PrivateRoute exact path='/report-second/:data' component={ReportsSecondLayer} isAuthenticated={isAuthenticated} />
+                <PrivateRoute exact path='/report-third/:data' component={ReportsThirdLayer} isAuthenticated={isAuthenticated} />
+                
+                <PrivateRoute exact path='/production' component={Production} isAuthenticated={isAuthenticated} />
+                <Redirect to={isAuthenticated ? '/home' : '/login'} />
+            </Switch>
+        </Router>
+    );
 }
 
 export default App;

@@ -565,6 +565,7 @@ module.exports = {
     let allPeriod = []
     let category = []
     let hiData = []
+    let yesterdayData = []
     let sdhiData = []
     let sdbiData = []
 
@@ -611,6 +612,16 @@ module.exports = {
       left join product_categories as d on c.category_id = d.id
       left join product_sub_categories as e on c.sub_category_id = e.id
       where b.date = '${moment().format('YYYY-MM-DD')}'
+      group by periode
+      ${where}`, {nest:true})
+
+      yesterdayData = await sequelize.query(`select DATE_FORMAT(b.date, '%Y-%m') as periode, ${sumCase.join(',')}
+      from transaction_items as a
+      left join transactions as b on a.transaction_id = b.id
+      left join product_entries as c on a.product = c.id
+      left join product_categories as d on c.category_id = d.id
+      left join product_sub_categories as e on c.sub_category_id = e.id
+      where b.date = '${moment().subtract(1, 'days').format('YYYY-MM-DD')}'
       group by periode
       ${where}`, {nest:true})
 
@@ -695,6 +706,21 @@ module.exports = {
       hiData = dataTemplate
     }
 
+    if(yesterdayData.length > 0){
+      yesterdayData = yesterdayData.map(yesterdayData => {
+        let parsedInt = {}
+        Object.keys(yesterdayData).map(dataKey => {
+          if(dataKey !== 'periode'){
+            return parsedInt = {...parsedInt, [dataKey]: parseFloat(yesterdayData[dataKey])}
+          }
+        })
+        
+        return parsedInt
+      })[0]
+    }else{
+      yesterdayData = dataTemplate
+    }
+
     if(sdhiData.length > 0){
       sdhiData = sdhiData.map(sdhiData => {
         let parsedInt = {}
@@ -711,21 +737,25 @@ module.exports = {
     }
 
     let hiCard = 0
+    let yesterdayCard = 0
     let sdhiCard = 0
     let sdbiCard = 0
 
     Object.keys(hiData).filter(key => key.split('_')[1] === 'amount').map(key => hiCard+=hiData[key])
+    Object.keys(yesterdayData).filter(key => key.split('_')[1] === 'amount').map(key => yesterdayCard+=yesterdayData[key])
     Object.keys(sdhiData).filter(key => key.split('_')[1] === 'amount').map(key => sdhiCard+=sdhiData[key])
     Object.keys(sdbiData).filter(key => key.split('_')[1] === 'amount').map(key => sdbiCard+=sdbiData[key])
 
     return res.status(200).send({
       tableData: {
         hi: hiData,
+        yesterday: yesterdayData,
         sdhi: sdhiData,
         sdbi: sdbiData
       },
       cardData: {
         hi: hiCard,
+        yesterday: yesterdayCard,
         sdhi: sdhiCard,
         sdbi: sdbiCard
       },

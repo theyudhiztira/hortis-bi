@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom'
 import * as moment from 'moment'
 import { Button, Tooltip } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import DailyReportTable from './components/dailyReportTable'
 
 const ReportsNew = () => {
   useEffect(() => {
@@ -88,6 +89,7 @@ const ReportsNew = () => {
   const [productionReport, setProductionReport] = useState({})
   const [toggleView, setToggleView] = useState(false)
   const history = useHistory()
+  const userData = JSON.parse(localStorage.getItem('hortis_user'))
 
   const parseTableData = () => {
     const tableData = textReport.tableData
@@ -99,7 +101,7 @@ const ReportsNew = () => {
 
     let result = category.map((data, key) => {
       return (<tr key={key}>
-        <td onClick={() => history.push(`/report-second/${data}`)} className='cursor-pointer'>{data}</td>
+        <td onClick={() => history.push(`/report-second/${data}`)} className='cursor-pointer' style={{width: "15%"}}>{data}</td>
         <td>{tableData.hi[data+'_qty']}</td>
         <td>{numeral(tableData.hi[data+'_amount']).format('0,0.[00]')}</td>
         <td>{tableData.sdhi[data+'_qty']}</td>
@@ -114,7 +116,6 @@ const ReportsNew = () => {
 
   const parseProductionTable = () => {
     const tableData = productionReport.tableData
-    console.log(tableData)
 
     const category = Object.keys(tableData.hi).map(data => {
       return data.split('_')[0]
@@ -158,10 +159,10 @@ const ReportsNew = () => {
         const isiData = textReport.summaryData.filter(data => data.periode === `${moment().format('YYYY')}-${('0' + i).slice(-2)}`).map(data => data)
 
         fisik = [...fisik, (<td title={data} style={{
-          minWidth: 153
+          width: "4%"
         }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_qty`]).format('0,0.[00]') : 0}</td>)]
         rupiah = [...rupiah, (<td title={data} style={{
-          minWidth: 153
+          width: "4%"
         }}>{isiData.length > 0 ? numeral(isiData[0][`${data}_amount`]).format('0,0.[00]') : 0}</td>)]
       }
       let tableRow = (<React.Fragment>
@@ -203,16 +204,18 @@ const ReportsNew = () => {
 
     return result
   }
-
+  
   return (
     <div className="w-full bg-gray-200 h-full pb-3">
-      <Navigation isFlex={false} />
-      <section className="w-full p-2 overflow-y-auto grid grid-cols-4 md:p-11 md:pl-80 gap-3">
+      <Navigation />
+      <section className="w-full p-2 overflow-y-auto grid grid-cols-4 md:p-11 md:pl-80 gap-3" style={{
+        paddingLeft: userData.role == 'user' ? '2rem' : '20rem'
+      }}>
         <div className="bg-white col-span-4 flex-col pb-36 rounded-md shadow-md p-5 lg:pb-24 md:col-span-2" style={{
           height: 431
         }}>
           <h1 className="text-2xl font-semibold col-span-4">Porsi Transaksi</h1>
-          <Pie data={pieChart} height={331} options={{
+          {pieChart.datasets && <Pie data={pieChart} height={331} options={{
             onClick: (ev, el) => {
               const label = pieChart.labels[el[0]['index']]
               if(Object.keys(pieChart).length > 0){
@@ -226,7 +229,7 @@ const ReportsNew = () => {
                 position: 'left'
               },
             }
-          }} />
+          }} />}
         </div>
 
         <div className="col-span-4 grid gap-2 md:col-span-2" style={{
@@ -235,21 +238,27 @@ const ReportsNew = () => {
           justifyContent: 'content'
         }}>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-lg font-semibold'>Total Hari Ini</h2>
+            <h2 className='text-md font-bold'>Total Hari Ini</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[00]') : 0}</h1>
+              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[00]') : 0}</h1>
             </div>
           </div>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-lg font-semibold'>Total Sampai Dengan Hari Ini</h2>
+            <h2 className='text-md font-bold'>Total Kemarin</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdhi).format('0,0.[00]') : 0}</h1>
+              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.yesterday).format('0,0.[00]') : 0}</h1>
             </div>
           </div>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-lg font-semibold'>Total Sampai Dengan Bulan Ini</h2>
+            <h2 className='text-md font-bold'>Total Sampai Dengan Bulan Ini</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
+              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
+            </div>
+          </div>
+          <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
+            <h2 className='text-md font-bold'>Total Sampai Dengan Bulan Ini</h2>
+            <div className='flex-grow flex'>
+              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
             </div>
           </div>
         </div>
@@ -257,7 +266,7 @@ const ReportsNew = () => {
           height: 431
         }}>
           <h1 className="text-2xl font-semibold col-span-4">Trend Transaksi Bulanan</h1>
-          <Line data={lineChart} options={{
+          {lineChart.datasets && <Line data={lineChart} options={{
             maintainAspectRatio : false,
             scales: {
               y: {
@@ -270,13 +279,13 @@ const ReportsNew = () => {
                 position: 'bottom'
               },
             }
-          }}/>
+          }}/>}
         </div>
         <div className="bg-white col-span-4 flex-col pb-36 lg:pb-24 rounded-md shadow-md p-5" style={{
           height: 431
         }}>
           <h1 className="text-2xl font-semibold col-span-4">Trend Transaksi Harian</h1>
-          <Line data={dailyChart} options={{
+          {dailyChart.datasets && <Line data={dailyChart} options={{
             maintainAspectRatio : false,
             scales: {
               y: {
@@ -289,7 +298,7 @@ const ReportsNew = () => {
                 position: 'bottom'
               },
             }
-          }}/>
+          }}/>}
         </div>
         
 
@@ -336,8 +345,8 @@ const ReportsNew = () => {
               <thead className='bg-gray-500'>
                 <tr>
                   <th style={{
-                    minWidth: 177
-                  }} key={"UNIQUEDATA0001"}>Produk</th>
+                    width: "4%"
+                  }} key={"UNIQUEDATA0001"}></th>
                   {
                     parseSummaryHeaderTable()
                   }
@@ -350,7 +359,13 @@ const ReportsNew = () => {
               </tbody>
             </table>
           </div>
+          <div className='w-full overflow-x-scroll my-5' style={{
+            display: toggleView ? "block" : "none"
+          }}>
+            {dailyChart.datasets && <DailyReportTable header={dailyChart.labels} datatable={dailyChart.datasets} />}
+          </div>
         </div>
+        
         <div className="bg-white flex-col col-span-4 rounded-md shadow-md p-5 " style={{
           height: 'auto'
         }}>

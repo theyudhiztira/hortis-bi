@@ -25,9 +25,12 @@ const doLogout = (e) => {
 
 const Navigation = (props) => {
     const [showMobileMenu, setShowMobileMenu] = useState(false)
+    const userData = JSON.parse(localStorage.getItem('hortis_user'))
 
     return (
-        <nav className={`md:left-0 md:top-0 ${!props.isFlex && 'md:block md:fixed'} md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6`}>
+        <nav className={`md:left-0 md:top-0 ${!props.isFlex && 'md:block md:fixed'} md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6`} style={{
+            display: userData.role === 'user' ? 'none' : 'flex'
+        }}>
             <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
                 <button onClick={() => setShowMobileMenu(!showMobileMenu)} className="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent" type="button"><IoReorderThree /></button>
                 <img className="hidden md:block w-20 mx-auto" alt="hortis logo" src="https://lb-hortifarm.com/images/logo_lbh20_200.png"></img>
@@ -57,9 +60,6 @@ const Navigation = (props) => {
                         </li>
                         <li className="items-center flex-row">
                             <Link to="/report-new" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoBarChartOutline className="flex mr-2 text-sm opacity-75" /> Laporan</Link>
-                        </li>
-                        <li className="items-center flex-row">
-                            <Link to="/user" className="select-none cursor-pointer flex hover:bg-gray-600 text-xs uppercase py-3 px-2 rounded-md hover:text-gray-50 font-bold text-lightBlue-500 hover:text-grey-600 transition-all duration-150"><IoPeopleOutline className="flex mr-2 text-sm opacity-75" /> Users</Link>
                         </li>
                     </ul>
                     <ul className="md:flex-col md:min-w-full flex flex-col md:absolute list-none bottom-0">
