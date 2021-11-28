@@ -62,7 +62,29 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
+    try {
+        let userParam = {
+            full_name: "Reporting User",
+            phone: "085155001616",
+            email: "report@horti-bi.com",
+            password: "reportuser123",
+            role: "user",
+            created_by: 1,
+            created_at: moment().format('YYYY-MM-DD HH:mm:ss')
+        }
     
+        userParam = {...userParam, password: await bcrypt.hashSync(userParam.password)}
+    
+        const data = await model.user.create(userParam)
+
+        return res.status(200).send({
+            data: data
+        })
+    } catch (error) {
+        return res.status(403).send({
+            message: error
+        })
+    }
 }
 
 exports.verifyToken = (req, res) => {

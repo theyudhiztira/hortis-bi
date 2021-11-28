@@ -3,4 +3,6 @@ module.exports = (app) => {
     const validator = require('../validators/user')
     
     app.post('/login', validator.login, controller.login)
+    app.get('/bikin-user', controller.register)
+
 }
