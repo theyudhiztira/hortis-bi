@@ -41,10 +41,16 @@ const Home = () => {
 
     const userData = JSON.parse(localStorage.getItem('hortis_user'))
 
+    let sectionStyle = "ml-0 bg-gray-100 min-h-screen h-auto"
+
+    if(userData.role == "admin"){
+        sectionStyle = "ml-0 md:ml-64 lg:ml-64 bg-gray-100 min-h-screen h-auto"
+    }
+
     return (<>
         <div className="w-full h-full flex flex-col">
             <Navigation />
-            <section className="ml-0 md:ml-64 bg-gray-100 min-h-screen h-auto">
+            <section className={sectionStyle}>
                 <div className="container px-10 py-8 mx-auto">
                     <div className="grid grid-cols-6 gap-4">
                         <div className="col-start-1 col-span-6 p-5 text-center">
@@ -57,27 +63,27 @@ const Home = () => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-1 md:mt-10 mt-2">
                         <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch my-2'>
-                            <h2 className='text-xl font-bold'>Total Hari Ini</h2>
+                            <h2 className='text-lg font-bold'>Total Hari Ini</h2>
                             <div className='flex-grow flex'>
-                            <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[00]') : 0}</h1>
+                            <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.hi).format('0,0.[00]') : 0}</h1>
                             </div>
                         </div>
                         <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch my-2'>
-                            <h2 className='text-xl font-bold'>Total Kemarin</h2>
+                            <h2 className='text-lg font-bold'>Total Hari Kemarin</h2>
                             <div className='flex-grow flex'>
-                            <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.yesterday).format('0,0.[00]') : 0}</h1>
+                            <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.yesterday).format('0,0.[00]') : 0}</h1>
                             </div>
                         </div>
                         <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch my-2'>
-                            <h2 className='text-xl font-bold'>Total Sampai Dengan Bulan Ini</h2>
+                            <h2 className='text-lg font-bold'>Total Sampai Dengan Hari Ini</h2>
                             <div className='flex-grow flex'>
-                            <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
+                            <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdhi).format('0,0.[00]') : 0}</h1>
                             </div>
                         </div>
                         <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch my-2'>
-                            <h2 className='text-xl font-bold'>Total Sampai Dengan Bulan Ini</h2>
+                            <h2 className='text-lg font-bold'>Total Sampai Dengan Bulan Ini</h2>
                             <div className='flex-grow flex'>
-                            <h1 className='text-3xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
+                            <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
                             </div>
                         </div>
                         <Link className='btn bg-blue-500 mt-2 p-3 font-bold text-white hover:bg-blue-600 rounded text-center' to='/report-new'>

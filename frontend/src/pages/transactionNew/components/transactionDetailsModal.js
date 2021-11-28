@@ -91,7 +91,7 @@ const TransactionDetailsModal = () => {
                             <td>{item.product_details.name}</td>
                             <td>Rp. {numeral(item.price).format('0,0.[00]')}</td>
                             <td>{item.pricing_type}</td>
-                            <td>{numeral(item.price).format('0,0.[00]')}</td>
+                            <td>{numeral(item.quantity).format('0.[00]')}</td>
                           </tr>)
                         })
                       }
@@ -103,7 +103,7 @@ const TransactionDetailsModal = () => {
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             {
-              checkTime(transaction.createdAt) <= 0 ? <button type='button' onClick={() => removeTransaction(transaction.id)} className={`block w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm bg-red-500 hover:bg-red-700`}>
+              checkTime(transaction.createdAt) <= "24" ? <button type='button' onClick={() => removeTransaction(transaction.id)} className={`block w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm bg-red-500 hover:bg-red-700`}>
                 Hapus
               </button> : ""
             }

@@ -192,13 +192,19 @@ const ReportsSecondLayer = (props) => {
 
     return result
   }
+  
+  let sectionStyle = "";
 
+  if(userData.role == 'admin'){
+    sectionStyle = "w-full p-2 overflow-y-auto grid grid-cols-4 md:p-11 md:pl-80 gap-3"
+  }else{
+    sectionStyle = "w-full p-2 overflow-y-auto grid grid-cols-4 md:p-11 gap-3"
+  }
+  
   return (
     <div className="w-full bg-gray-200 h-full pb-3">
-      <Navigation isFlex={false} />
-      <section className="w-full p-2 overflow-y-auto grid grid-cols-4 md:p-11 md:pl-80 gap-3" style={{
-        paddingLeft: userData.role == 'user' ? '2rem' : '20rem'
-      }}>
+      <Navigation />
+      <section className={sectionStyle}>
         <div className="flex-col col-span-4 py-2">
           <h1 className='text-blue-600 cursor-pointer hover:underline' onClick={() => props.history.goBack()}><IoCaretBack className='inline-block' /> Back</h1>
         </div>
@@ -236,15 +242,15 @@ const ReportsSecondLayer = (props) => {
             </div>
           </div>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-md font-bold'>Total Kemarin</h2>
+            <h2 className='text-md font-bold'>Total Hari Kemarin</h2>
             <div className='flex-grow flex'>
               <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.yesterday).format('0,0.[00]') : 0}</h1>
             </div>
           </div>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
-            <h2 className='text-md font-bold'>Total Sampai Dengan Bulan Ini</h2>
+            <h2 className='text-md font-bold'>Total Sampai Dengan Hari Ini</h2>
             <div className='flex-grow flex'>
-              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdbi).format('0,0.[00]') : 0}</h1>
+              <h1 className='text-xl self-center'>Rp. {textReport.cardData ? numeral(textReport.cardData.sdhi).format('0,0.[00]') : 0}</h1>
             </div>
           </div>
           <div className='bg-white rounded-md shadow-md p-3 flex flex-col items-stretch'>
